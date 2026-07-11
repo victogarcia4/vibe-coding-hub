@@ -62,7 +62,7 @@ export default function Home() {
         {/* Background image */}
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url(/manus-storage/hero-bg_7e372a1c.png)" }}
+          style={{ backgroundImage: "url(https://d36hbw14aib5lz.cloudfront.net/310419663032046254/8vbHfNLTfUL3Mvpo7dHqU4/hero-bg_7e372a1c.png)" }}
         />
         <div
           className="absolute inset-0"
@@ -342,7 +342,7 @@ export default function Home() {
           >
             <div
               className="absolute inset-0 opacity-5"
-              style={{ backgroundImage: "url(/manus-storage/workflow-map_91185978.png)", backgroundSize: "cover", backgroundPosition: "center" }}
+              style={{ backgroundImage: "url(https://d36hbw14aib5lz.cloudfront.net/310419663032046254/8vbHfNLTfUL3Mvpo7dHqU4/workflow-map_91185978.png)", backgroundSize: "cover", backgroundPosition: "center" }}
             />
             <div className="relative z-10">
               <div className="tag-mono mb-4 inline-block" style={{ background: "oklch(0.82 0.16 85 / 0.12)", border: "1px solid oklch(0.82 0.16 85 / 0.3)", color: "oklch(0.82 0.16 85)" }}>
@@ -377,7 +377,7 @@ export default function Home() {
       <footer className="py-12 border-t" style={{ borderColor: "oklch(0.22 0.015 260)" }}>
         <div className="container flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <img src="/manus-storage/logo-icon_5195df88.png" alt="Logo" className="w-6 h-6" />
+            <img src="https://d36hbw14aib5lz.cloudfront.net/310419663032046254/8vbHfNLTfUL3Mvpo7dHqU4/logo-icon_5195df88.png" alt="Logo" className="w-6 h-6" />
             <span className="text-sm font-semibold" style={{ fontFamily: "var(--font-display)", color: "oklch(0.55 0.01 260)" }}>
               VIBEHUB — Strategic Resource Hub
             </span>
@@ -389,7 +389,7 @@ export default function Home() {
             className="flex items-center gap-3 group transition-all hover:opacity-80"
           >
             <img
-              src="/manus-storage/VHGMpicfoto_006cff98.png"
+              src="https://d36hbw14aib5lz.cloudfront.net/310419663032046254/8vbHfNLTfUL3Mvpo7dHqU4/VHGMpicfoto_006cff98.png"
               alt="Dr. Victor Garcia Martinez"
               className="w-8 h-8 rounded-full object-cover object-top"
               style={{ border: "2px solid oklch(0.78 0.18 200 / 0.4)" }}

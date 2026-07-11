@@ -58,7 +58,7 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 group">
           <div className="w-8 h-8 rounded-lg overflow-hidden cyan-glow">
-            <img src="/manus-storage/logo-icon_5195df88.png" alt="Vibe Coding Hub" className="w-full h-full object-cover" />
+            <img src="https://d36hbw14aib5lz.cloudfront.net/310419663032046254/8vbHfNLTfUL3Mvpo7dHqU4/logo-icon_5195df88.png" alt="Vibe Coding Hub" className="w-full h-full object-cover" />
           </div>
           <span className="font-semibold text-sm tracking-wide" style={{ fontFamily: "var(--font-display)", color: logoTextColor }}>
             VIBE<span style={{ color: isDark ? "oklch(0.78 0.18 200)" : "oklch(0.45 0.18 200)" }}>HUB</span>
