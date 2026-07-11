@@ -2,7 +2,7 @@
 // Hero + Feature Overview + Quick Stats + CTA
 import { motion } from "framer-motion";
 import { Link } from "wouter";
-import { ArrowRight, Layers, Cpu, Zap, BookOpen, GitBranch, Star } from "lucide-react";
+import { ArrowRight, Layers, Cpu, Zap, BookOpen, GitBranch } from "lucide-react";
 import Navbar from "@/components/Navbar";
 
 const fadeUp = {
@@ -382,13 +382,29 @@ export default function Home() {
               VIBEHUB — Strategic Resource Hub
             </span>
           </div>
-          <div className="flex items-center gap-1 text-xs" style={{ fontFamily: "var(--font-mono)", color: "oklch(0.40 0.01 260)" }}>
-            <Star size={10} />
-            <span>Built with Manus · Deployable on Vercel & Netlify</span>
-          </div>
+          <a
+            href="https://48hours.live"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 group transition-all hover:opacity-80"
+          >
+            <img
+              src="/manus-storage/VHGMpicfoto_006cff98.png"
+              alt="Dr. Victor Garcia Martinez"
+              className="w-8 h-8 rounded-full object-cover object-top"
+              style={{ border: "2px solid oklch(0.78 0.18 200 / 0.4)" }}
+            />
+            <div className="text-right">
+              <div className="text-xs font-semibold" style={{ fontFamily: "var(--font-display)", color: "oklch(0.65 0.01 260)" }}>
+                Built by Dr. Victor Garcia Martinez
+              </div>
+              <div className="text-xs" style={{ fontFamily: "var(--font-mono)", color: "oklch(0.78 0.18 200)", letterSpacing: "0.05em" }}>
+                48hours.live ↗
+              </div>
+            </div>
+          </a>
         </div>
       </footer>
     </div>
   );
 }
-
