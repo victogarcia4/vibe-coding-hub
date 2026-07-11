@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ExternalLink, CheckCircle2, XCircle, Star } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import { vibeTools, comparisonMatrix } from "@/data/vibeTools";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -17,6 +18,8 @@ const fadeUp = {
 
 export default function VibeCoding() {
   const [activeTab, setActiveTab] = useState<"profiles" | "matrix">("profiles");
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   return (
     <PageLayout
@@ -54,7 +57,10 @@ export default function VibeCoding() {
               whileInView="visible"
               viewport={{ once: true }}
               className="rounded-2xl p-8"
-              style={{ background: "oklch(0.11 0.013 260)", border: "1px solid oklch(0.18 0.015 260)" }}
+              style={{
+                background: isDark ? "oklch(0.11 0.013 260)" : "oklch(1 0 0)",
+                border: isDark ? "1px solid oklch(0.18 0.015 260)" : "1px solid oklch(0.88 0.006 260)",
+              }}
             >
               <div className="flex flex-col md:flex-row md:items-start gap-6">
                 <div className="flex-1">
@@ -137,6 +143,43 @@ export default function VibeCoding() {
                         {tool.pricing}
                       </span>
                     </div>
+                    {/* Pricing tiers */}
+                    <div className="mt-3 space-y-2 mb-3">
+                      {tool.pricingTiers.map((tier) => (
+                        <div
+                          key={tier.label}
+                          className="p-2 rounded-lg"
+                          style={{
+                            background: isDark ? "oklch(0.14 0.012 260)" : "oklch(0.96 0.005 260)",
+                            border: isDark ? "1px solid oklch(0.20 0.015 260)" : "1px solid oklch(0.88 0.006 260)",
+                          }}
+                        >
+                          <div className="flex items-center justify-between mb-0.5">
+                            <span style={{ fontFamily: "var(--font-display)", color: isDark ? "oklch(0.78 0.18 200)" : "oklch(0.45 0.18 200)", fontSize: "0.65rem", fontWeight: 700 }}>
+                              {tier.label}
+                            </span>
+                            <span style={{ fontFamily: "var(--font-mono)", color: isDark ? "oklch(0.85 0.005 260)" : "oklch(0.20 0.015 260)", fontSize: "0.65rem", fontWeight: 700 }}>
+                              {tier.monthly}
+                            </span>
+                          </div>
+                          <div style={{ color: isDark ? "oklch(0.45 0.01 260)" : "oklch(0.50 0.01 260)", fontSize: "0.6rem" }}>
+                            {tier.credits}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div
+                      className="mb-3 p-2 rounded-lg"
+                      style={{
+                        background: isDark ? "oklch(0.78 0.18 200 / 0.06)" : "oklch(0.45 0.18 200 / 0.06)",
+                        border: isDark ? "1px solid oklch(0.78 0.18 200 / 0.2)" : "1px solid oklch(0.45 0.18 200 / 0.2)",
+                      }}
+                    >
+                      <div style={{ fontFamily: "var(--font-mono)", letterSpacing: "0.08em", textTransform: "uppercase", fontWeight: 600, color: isDark ? "oklch(0.78 0.18 200)" : "oklch(0.45 0.18 200)", fontSize: "0.58rem" }}>
+                        Est. Project Cost ↓
+                      </div>
+                      <p style={{ color: isDark ? "oklch(0.55 0.01 260)" : "oklch(0.40 0.01 260)", fontSize: "0.62rem", marginTop: "0.25rem", lineHeight: 1.5 }}>{tool.typicalProjectCost}</p>
+                    </div>
                     <a
                       href={tool.url}
                       target="_blank"
@@ -162,7 +205,7 @@ export default function VibeCoding() {
         >
           <div
             className="rounded-2xl overflow-hidden"
-            style={{ background: "oklch(0.11 0.013 260)", border: "1px solid oklch(0.18 0.015 260)" }}
+            style={{ background: isDark ? "oklch(0.11 0.013 260)" : "oklch(1 0 0)", border: isDark ? "1px solid oklch(0.18 0.015 260)" : "1px solid oklch(0.88 0.006 260)" }}
           >
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -234,4 +277,3 @@ export default function VibeCoding() {
     </PageLayout>
   );
 }
-

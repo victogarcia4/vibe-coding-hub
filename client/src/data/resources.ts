@@ -4,6 +4,7 @@ export interface Resource {
   id: string;
   name: string;
   description: string;
+  vibecoderNote?: string; // Plain-English explanation for non-technical users
   url: string;
   category: string;
   subcategory: string;
@@ -17,6 +18,7 @@ export const resources: Resource[] = [
     id: "framer-motion",
     name: "Framer Motion",
     description: "Production-ready motion library for React. Declarative animations, gestures, and layout transitions.",
+    vibecoderNote: "Adds smooth animations to your app — buttons that bounce, pages that slide, elements that fade in. Just describe the animation you want to your vibe coding agent.",
     url: "https://www.framer.com/motion/",
     category: "frontend",
     subcategory: "Libraries",
@@ -27,6 +29,7 @@ export const resources: Resource[] = [
     id: "magic-ui",
     name: "Magic UI",
     description: "React components for building beautiful landing pages with animated, glassmorphic UI elements.",
+    vibecoderNote: "A collection of ready-made visual components — glowing cards, animated text, particle effects. Tell your agent to 'use Magic UI components' for instant polish.",
     url: "https://magicui.design/",
     category: "frontend",
     subcategory: "Libraries",
@@ -37,6 +40,7 @@ export const resources: Resource[] = [
     id: "shadcn",
     name: "shadcn/ui",
     description: "Beautifully designed components built with Radix UI and Tailwind CSS. Copy-paste ready.",
+    vibecoderNote: "Pre-built UI pieces like buttons, forms, and dropdowns. Your agent can use these automatically — just ask for 'a clean, accessible form' and it will use shadcn.",
     url: "https://ui.shadcn.com/",
     category: "frontend",
     subcategory: "Component Libraries",
@@ -46,6 +50,7 @@ export const resources: Resource[] = [
     id: "tailwindcss",
     name: "Tailwind CSS",
     description: "Utility-first CSS framework for rapid UI development with a consistent design system.",
+    vibecoderNote: "The styling system your vibe coding agent uses behind the scenes. You don't need to learn it — just describe how you want things to look.",
     url: "https://tailwindcss.com/",
     category: "frontend",
     subcategory: "Styling",
@@ -55,6 +60,7 @@ export const resources: Resource[] = [
     id: "nextjs",
     name: "Next.js",
     description: "The React framework for production — hybrid static & server rendering, TypeScript support, smart bundling.",
+    vibecoderNote: "The most popular framework for building fast websites. Think of it as the engine under the hood — your agent builds on top of it automatically.",
     url: "https://nextjs.org/",
     category: "frontend",
     subcategory: "Frameworks",
@@ -64,6 +70,7 @@ export const resources: Resource[] = [
     id: "vite",
     name: "Vite",
     description: "Next-generation frontend tooling. Instant server start, lightning-fast HMR, and optimized builds.",
+    vibecoderNote: "The tool that makes your development preview refresh instantly. You'll never interact with it directly — it just makes everything faster.",
     url: "https://vitejs.dev/",
     category: "frontend",
     subcategory: "Tooling",
@@ -74,6 +81,7 @@ export const resources: Resource[] = [
     id: "supabase",
     name: "Supabase",
     description: "Open source Firebase alternative. Postgres database, Auth, instant APIs, Edge Functions, Realtime, and Storage.",
+    vibecoderNote: "Think of Supabase as your app's memory and security guard combined. It stores your users' data (like profiles, posts, orders), handles logins, and keeps everything safe — all without you writing a single line of server code. Best for apps that need structured data (like a spreadsheet with rows and columns).",
     url: "https://supabase.com/",
     category: "backend",
     subcategory: "Relational",
@@ -84,6 +92,7 @@ export const resources: Resource[] = [
     id: "neon",
     name: "Neon",
     description: "Serverless Postgres built for the cloud. Autoscaling, branching, and bottomless storage.",
+    vibecoderNote: "Like Supabase but leaner — a database that scales automatically and only charges you for what you use. Great when you want a powerful database without a monthly fee until your app grows. Tell your agent 'use Neon for the database' and it handles the rest.",
     url: "https://neon.tech/",
     category: "backend",
     subcategory: "Relational",
@@ -93,6 +102,7 @@ export const resources: Resource[] = [
     id: "convex",
     name: "Convex",
     description: "Backend application platform with real-time sync. TypeScript-native, reactive queries, built-in auth.",
+    vibecoderNote: "Perfect for apps where data needs to update live — like a chat app, a collaborative document, or a live dashboard. When one user changes something, every other user sees it instantly. No refresh needed. If your app needs to feel 'alive', use Convex.",
     url: "https://www.convex.dev/",
     category: "backend",
     subcategory: "NoSQL",
@@ -103,6 +113,7 @@ export const resources: Resource[] = [
     id: "firebase",
     name: "Firebase",
     description: "Google's app development platform. Realtime database, authentication, hosting, and cloud functions.",
+    vibecoderNote: "Google's all-in-one backend — handles user logins, stores data, and updates in real-time. Very popular for mobile-first apps and PWAs. If you've heard of it before, it's a safe, well-supported choice. Your agent knows Firebase very well.",
     url: "https://firebase.google.com/",
     category: "backend",
     subcategory: "NoSQL",
@@ -113,6 +124,7 @@ export const resources: Resource[] = [
     id: "mongodb-atlas",
     name: "MongoDB Atlas",
     description: "Multi-cloud developer data platform. Flexible document model, global clusters, and built-in search.",
+    vibecoderNote: "A database that stores data like flexible notes rather than rigid spreadsheets. Great when your data doesn't fit a fixed structure — like user-generated content, product catalogs with varying attributes, or anything that changes shape over time.",
     url: "https://www.mongodb.com/atlas",
     category: "backend",
     subcategory: "NoSQL",
@@ -122,6 +134,7 @@ export const resources: Resource[] = [
     id: "oracle-free",
     name: "Oracle Cloud Free Tier",
     description: "Always-free cloud resources including Autonomous Database, Compute, and Object Storage.",
+    vibecoderNote: "A completely free database option from Oracle — no credit card required, no expiry. Good for learning projects or apps with low traffic. The trade-off: setup is more complex, so best used when your agent handles the configuration.",
     url: "https://www.oracle.com/cloud/free/",
     category: "backend",
     subcategory: "Relational",

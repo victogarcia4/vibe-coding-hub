@@ -1,8 +1,9 @@
 // Workflow Integration Map Page — Obsidian Architect Design
 // Architectural sidebar layout + visual pipeline
 import { motion } from "framer-motion";
-import { ArrowDown, ArrowRight, BookOpen, Cpu, Database, Zap, FileText, GitBranch } from "lucide-react";
+import { ArrowDown, ArrowRight, BookOpen, Cpu, Database, Zap, FileText, GitBranch, Github, Globe } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -17,8 +18,10 @@ const workflowSteps = [
   { phase: "01", title: "Ideation & Style", tool: "Dribbble / Refero / Godly", description: "Browse curated design galleries to define the visual language of your project. Save references that match your target audience and brand personality.", icon: <FileText size={18} />, outputs: ["Mood board", "Color palette", "Typography choices"] },
   { phase: "02", title: "Documentation Synthesis", tool: "NotebookLM", description: "Upload official documentation for your chosen stack (Supabase, Convex, Framer Motion) into NotebookLM. Generate source-grounded Q&A to extract precise architectural patterns before writing any code.", icon: <BookOpen size={18} />, outputs: ["Schema designs", "RLS policies", "API patterns", "Context-aware prompts"], highlight: true },
   { phase: "03", title: "Architecture Selection", tool: "Resource Vault", description: "Select your database based on query needs. Relational data → Supabase/Neon. Real-time sync → Convex/Firebase. Flexible schema → MongoDB Atlas. Define your data model before execution.", icon: <Database size={18} />, outputs: ["Database schema", "API architecture", "Auth strategy"] },
-  { phase: "04", title: "Vibe Coding Execution", tool: "Manus / Lovable / Emergent", description: "Feed the synthesized context from NotebookLM directly into your chosen vibe coding agent. The agent now has precise, source-grounded instructions rather than generic patterns.", icon: <Cpu size={18} />, outputs: ["Working codebase", "Deployed preview", "GitHub repository"] },
-  { phase: "05", title: "Iteration & Refinement", tool: "Lovable Visual Editor / Manus", description: "Iterate on the UI with Lovable's visual editor or refine complex logic with Manus. Use NotebookLM for error diagnosis — paste error logs and ask for source-grounded fixes.", icon: <GitBranch size={18} />, outputs: ["Refined UI", "Bug fixes", "Performance optimization"] },
+  { phase: "04", title: "Vibe Coding Execution", tool: "Manus / Lovable / Emergent", description: "Feed the synthesized context from NotebookLM directly into your chosen vibe coding agent. The agent now has precise, source-grounded instructions rather than generic patterns.", icon: <Cpu size={18} />, outputs: ["Working codebase", "Deployed preview"] },
+  { phase: "05", title: "Commit to GitHub", tool: "GitHub", description: "Export your project code to a GitHub repository. This gives you a permanent backup, version history, and the ability to collaborate. In Manus and Lovable, click 'Export to GitHub' — it takes under a minute. This step unlocks deployment to Vercel and Netlify.", icon: <Github size={18} />, outputs: ["GitHub repository", "Version history", "Collaboration ready"], isGithub: true },
+  { phase: "06", title: "Deploy to Vercel or Netlify", tool: "Vercel / Netlify", description: "Connect your GitHub repository to Vercel or Netlify with one click. Every time you push new code to GitHub, your live site updates automatically. Both platforms offer a generous free tier — your PWA will be live on a public URL in under 2 minutes.", icon: <Globe size={18} />, outputs: ["Live public URL", "Auto-deploy on push", "Free SSL certificate", "Custom domain support"], isDeploy: true },
+  { phase: "07", title: "Iteration & Refinement", tool: "Lovable Visual Editor / Manus", description: "Iterate on the UI with Lovable's visual editor or refine complex logic with Manus. Each change you make gets committed to GitHub automatically, and your live site on Vercel/Netlify updates within seconds.", icon: <GitBranch size={18} />, outputs: ["Refined UI", "Bug fixes", "Auto-deployed updates"] },
 ];
 
 const notebookLMTips = [
@@ -29,6 +32,9 @@ const notebookLMTips = [
 ];
 
 export default function WorkflowMap() {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
   return (
     <PageLayout
       title="Workflow Integration Map"
@@ -48,9 +54,9 @@ export default function WorkflowMap() {
             <div
               className="rounded-2xl p-7 relative"
               style={{
-                background: "oklch(0.11 0.013 260)",
-                border: step.highlight ? "1px solid oklch(0.78 0.18 200 / 0.4)" : "1px solid oklch(0.18 0.015 260)",
-                boxShadow: step.highlight ? "0 0 28px oklch(0.78 0.18 200 / 0.1)" : "none",
+                background: isDark ? "oklch(0.11 0.013 260)" : "oklch(1 0 0)",
+                border: (step as any).isGithub ? "1px solid oklch(0.82 0.16 85 / 0.4)" : (step as any).isDeploy ? "1px solid oklch(0.70 0.18 160 / 0.4)" : step.highlight ? "1px solid oklch(0.78 0.18 200 / 0.4)" : isDark ? "1px solid oklch(0.18 0.015 260)" : "1px solid oklch(0.88 0.006 260)",
+                boxShadow: (step as any).isGithub ? "0 0 28px oklch(0.82 0.16 85 / 0.08)" : (step as any).isDeploy ? "0 0 28px oklch(0.70 0.18 160 / 0.08)" : step.highlight ? "0 0 28px oklch(0.78 0.18 200 / 0.1)" : "none",
               }}
             >
               {step.highlight && (
@@ -59,6 +65,16 @@ export default function WorkflowMap() {
                   style={{ background: "oklch(0.78 0.18 200 / 0.1)", color: "oklch(0.78 0.18 200)", border: "1px solid oklch(0.78 0.18 200 / 0.25)" }}
                 >
                   Core Step
+                </div>
+              )}
+              {(step as any).isGithub && (
+                <div className="absolute top-4 right-4 tag-mono" style={{ background: "oklch(0.82 0.16 85 / 0.1)", color: "oklch(0.82 0.16 85)", border: "1px solid oklch(0.82 0.16 85 / 0.3)" }}>
+                  Required
+                </div>
+              )}
+              {(step as any).isDeploy && (
+                <div className="absolute top-4 right-4 tag-mono" style={{ background: "oklch(0.70 0.18 160 / 0.1)", color: "oklch(0.70 0.18 160)", border: "1px solid oklch(0.70 0.18 160 / 0.3)" }}>
+                  Go Live
                 </div>
               )}
               <div className="flex items-start gap-5">
@@ -71,11 +87,11 @@ export default function WorkflowMap() {
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-1">
                     <span className="text-xs font-bold" style={{ fontFamily: "var(--font-mono)", color: "oklch(0.78 0.18 200)" }}>
-                      PHASE {step.phase}
-                    </span>
+                    PHASE {step.phase}
+                  </span>
                     <span className="tag-mono" style={{ background: "oklch(0.14 0.012 260)", color: "oklch(0.38 0.01 260)" }}>
-                      {step.tool}
-                    </span>
+                    {step.tool}
+                  </span>
                   </div>
                   <h3
                     className="text-lg font-bold mb-2"
@@ -196,4 +212,3 @@ export default function WorkflowMap() {
     </PageLayout>
   );
 }
-

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ExternalLink, Search } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import { resources, categories } from "@/data/resources";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -18,6 +19,8 @@ const fadeUp = {
 export default function ResourceVault() {
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [search, setSearch] = useState("");
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   const filtered = useMemo(() => {
     return resources.filter((r) => {
@@ -127,8 +130,8 @@ export default function ResourceVault() {
                   viewport={{ once: true }}
                   className="block group relative rounded-xl p-5 transition-all duration-200"
                   style={{
-                    background: "oklch(0.11 0.013 260)",
-                    border: "1px solid oklch(0.18 0.015 260)",
+                    background: isDark ? "oklch(0.11 0.013 260)" : "oklch(1 0 0)",
+                    border: isDark ? "1px solid oklch(0.18 0.015 260)" : "1px solid oklch(0.88 0.006 260)",
                   }}
                   whileHover={{
                     borderColor: "oklch(0.78 0.18 200 / 0.45)",
@@ -160,6 +163,21 @@ export default function ResourceVault() {
                   <p className="text-xs leading-relaxed mb-4" style={{ color: "oklch(0.45 0.01 260)" }}>
                     {resource.description}
                   </p>
+                  {resource.vibecoderNote && (
+                    <div
+                      className="mb-4 p-3 rounded-lg text-xs leading-relaxed"
+                      style={{
+                        background: isDark ? "oklch(0.78 0.18 200 / 0.06)" : "oklch(0.45 0.18 200 / 0.06)",
+                        border: isDark ? "1px solid oklch(0.78 0.18 200 / 0.2)" : "1px solid oklch(0.45 0.18 200 / 0.2)",
+                        color: isDark ? "oklch(0.65 0.01 260)" : "oklch(0.35 0.01 260)",
+                      }}
+                    >
+                      <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase" as const, fontWeight: 600, color: isDark ? "oklch(0.78 0.18 200)" : "oklch(0.45 0.18 200)" }}>
+                        For Vibecoders ↓
+                      </span>
+                      <p className="mt-1">{resource.vibecoderNote}</p>
+                    </div>
+                  )}
                   <div className="flex flex-wrap gap-1.5 mb-3">
                     {resource.tags.map((tag) => (
                       <span
@@ -194,4 +212,3 @@ export default function ResourceVault() {
     </PageLayout>
   );
 }
-
