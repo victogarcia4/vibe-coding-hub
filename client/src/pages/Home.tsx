@@ -86,7 +86,7 @@ export default function Home() {
               Build Smarter.
               <br />
               <span style={{
-                background: `linear-gradient(135deg, ${cyan}, ${gold})`,
+                backgroundImage: `linear-gradient(135deg, ${cyan}, ${gold})`,
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
@@ -189,7 +189,7 @@ export default function Home() {
               <div className="h-px mb-6 w-16" style={{ background: `linear-gradient(90deg, ${cyan.replace(")", " / 0.7)")}, transparent)` }} />
               <h2 className="text-3xl md:text-4xl font-bold mb-6" style={{ fontFamily: "var(--font-display)", color: headingColor }}>
                 The Vibe Coding<br />
-                <span style={{ background: `linear-gradient(135deg, ${cyan}, ${gold})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+                <span style={{ backgroundImage: `linear-gradient(135deg, ${cyan}, ${gold})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
                   Recommendation Engine
                 </span>
               </h2>

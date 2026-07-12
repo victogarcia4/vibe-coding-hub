@@ -22,6 +22,9 @@ export default function ResourceVault() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
+  const cyan = isDark ? "oklch(0.78 0.18 200)" : "oklch(0.45 0.18 200)";
+  const gold = isDark ? "oklch(0.82 0.16 85)" : "oklch(0.55 0.14 85)";
+
   const filtered = useMemo(() => {
     return resources.filter((r) => {
       const matchCat = activeCategory === "all" || r.category === activeCategory;
@@ -44,16 +47,19 @@ export default function ResourceVault() {
       <div className="flex flex-col sm:flex-row gap-3 mb-10">
         <div
           className="flex items-center gap-3 flex-1 px-4 py-2.5 rounded-lg"
-          style={{ background: "oklch(0.11 0.013 260)", border: "1px solid oklch(0.20 0.015 260)" }}
+          style={{
+            background: isDark ? "oklch(0.11 0.013 260)" : "oklch(0.95 0.005 260)",
+            border: `1px solid ${isDark ? "oklch(0.20 0.015 260)" : "oklch(0.88 0.006 260)"}`,
+          }}
         >
-          <Search size={14} style={{ color: "oklch(0.40 0.01 260)" }} />
+          <Search size={14} style={{ color: isDark ? "oklch(0.55 0.01 260)" : "oklch(0.40 0.01 260)" }} />
           <input
             type="text"
             placeholder="Search resources..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="flex-1 bg-transparent outline-none text-sm"
-            style={{ fontFamily: "var(--font-body)", color: "oklch(0.85 0.005 260)" }}
+            style={{ fontFamily: "var(--font-body)", color: isDark ? "oklch(0.85 0.005 260)" : "oklch(0.15 0.015 260)" }}
           />
         </div>
         <div className="flex flex-wrap gap-2">
@@ -61,9 +67,9 @@ export default function ResourceVault() {
             onClick={() => setActiveCategory("all")}
             className="tag-mono px-4 py-2 rounded-md transition-all"
             style={{
-              background: activeCategory === "all" ? "oklch(0.78 0.18 200)" : "oklch(0.11 0.013 260)",
-              color: activeCategory === "all" ? "oklch(0.08 0.01 260)" : "oklch(0.45 0.01 260)",
-              border: `1px solid ${activeCategory === "all" ? "oklch(0.78 0.18 200)" : "oklch(0.20 0.015 260)"}`,
+              background: activeCategory === "all" ? cyan : (isDark ? "oklch(0.11 0.013 260)" : "oklch(0.95 0.005 260)"),
+              color: activeCategory === "all" ? (isDark ? "oklch(0.08 0.01 260)" : "oklch(0.98 0 0)") : (isDark ? "oklch(0.45 0.01 260)" : "oklch(0.30 0.01 260)"),
+              border: `1px solid ${activeCategory === "all" ? cyan : (isDark ? "oklch(0.20 0.015 260)" : "oklch(0.88 0.006 260)")}`,
             }}
           >
             All
@@ -74,9 +80,9 @@ export default function ResourceVault() {
               onClick={() => setActiveCategory(cat.id)}
               className="tag-mono px-4 py-2 rounded-md transition-all"
               style={{
-                background: activeCategory === cat.id ? "oklch(0.78 0.18 200)" : "oklch(0.11 0.013 260)",
-                color: activeCategory === cat.id ? "oklch(0.08 0.01 260)" : "oklch(0.45 0.01 260)",
-                border: `1px solid ${activeCategory === cat.id ? "oklch(0.78 0.18 200)" : "oklch(0.20 0.015 260)"}`,
+                background: activeCategory === cat.id ? cyan : (isDark ? "oklch(0.11 0.013 260)" : "oklch(0.95 0.005 260)"),
+                color: activeCategory === cat.id ? (isDark ? "oklch(0.08 0.01 260)" : "oklch(0.98 0 0)") : (isDark ? "oklch(0.45 0.01 260)" : "oklch(0.30 0.01 260)"),
+                border: `1px solid ${activeCategory === cat.id ? cyan : (isDark ? "oklch(0.20 0.015 260)" : "oklch(0.88 0.006 260)")}`,
               }}
             >
               {cat.label}
@@ -95,18 +101,18 @@ export default function ResourceVault() {
             <div className="flex items-center gap-4 mb-5">
               <div
                 className="w-8 h-8 rounded-lg flex items-center justify-center text-sm flex-shrink-0"
-                style={{ background: "oklch(0.78 0.18 200 / 0.1)", color: "oklch(0.78 0.18 200)" }}
+                style={{ background: `${cyan}18`, color: cyan }}
               >
                 {cat.icon}
               </div>
               <div>
                 <h2
                   className="text-lg font-bold leading-tight"
-                  style={{ fontFamily: "var(--font-display)", color: "oklch(0.92 0.005 260)", letterSpacing: "-0.01em" }}
+                  style={{ fontFamily: "var(--font-display)", color: isDark ? "oklch(0.92 0.005 260)" : "oklch(0.12 0.015 260)", letterSpacing: "-0.01em" }}
                 >
                   {cat.label}
                 </h2>
-                <p className="text-xs mt-0.5" style={{ color: "oklch(0.38 0.01 260)", fontFamily: "var(--font-mono)" }}>
+                <p className="text-xs mt-0.5" style={{ color: isDark ? "oklch(0.55 0.01 260)" : "oklch(0.40 0.01 260)", fontFamily: "var(--font-mono)" }}>
                   {cat.description}
                 </p>
               </div>
@@ -114,7 +120,7 @@ export default function ResourceVault() {
             {/* Cyan divider */}
             <div
               className="h-px mb-6"
-              style={{ background: "linear-gradient(90deg, oklch(0.78 0.18 200 / 0.5), transparent)" }}
+              style={{ background: `linear-gradient(90deg, ${cyan.replace(")", " / 0.5)")}, transparent)` }}
             />
             <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">
               {catResources.map((resource, i) => (
@@ -134,15 +140,15 @@ export default function ResourceVault() {
                     border: isDark ? "1px solid oklch(0.18 0.015 260)" : "1px solid oklch(0.88 0.006 260)",
                   }}
                   whileHover={{
-                    borderColor: "oklch(0.78 0.18 200 / 0.45)",
-                    boxShadow: "0 0 20px oklch(0.78 0.18 200 / 0.1)",
+                    borderColor: cyan.replace(")", " / 0.45)"),
+                    boxShadow: `0 0 20px ${cyan.replace(")", " / 0.15)")}`,
                     y: -2,
                   }}
                 >
                   {resource.highlight && (
                     <div
                       className="absolute top-3 right-3 tag-mono"
-                      style={{ background: "oklch(0.78 0.18 200 / 0.12)", color: "oklch(0.78 0.18 200)", border: "1px solid oklch(0.78 0.18 200 / 0.3)" }}
+                      style={{ background: `${cyan}18`, color: cyan, border: `1px solid ${cyan.replace(")", " / 0.3)")}` }}
                     >
                       ★
                     </div>
@@ -150,29 +156,29 @@ export default function ResourceVault() {
                   <div className="flex items-start justify-between mb-2">
                     <h3
                       className="font-semibold text-sm leading-tight"
-                      style={{ fontFamily: "var(--font-display)", color: "oklch(0.90 0.005 260)" }}
+                      style={{ fontFamily: "var(--font-display)", color: isDark ? "oklch(0.90 0.005 260)" : "oklch(0.15 0.015 260)" }}
                     >
                       {resource.name}
                     </h3>
                     <ExternalLink
                       size={12}
                       className="opacity-0 group-hover:opacity-100 transition-opacity mt-0.5 ml-2 flex-shrink-0"
-                      style={{ color: "oklch(0.78 0.18 200)" }}
+                      style={{ color: cyan }}
                     />
                   </div>
-                  <p className="text-xs leading-relaxed mb-4" style={{ color: "oklch(0.45 0.01 260)" }}>
+                  <p className="text-xs leading-relaxed mb-4" style={{ color: isDark ? "oklch(0.60 0.01 260)" : "oklch(0.35 0.01 260)" }}>
                     {resource.description}
                   </p>
                   {resource.vibecoderNote && (
                     <div
                       className="mb-4 p-3 rounded-lg text-xs leading-relaxed"
                       style={{
-                        background: isDark ? "oklch(0.78 0.18 200 / 0.06)" : "oklch(0.45 0.18 200 / 0.06)",
-                        border: isDark ? "1px solid oklch(0.78 0.18 200 / 0.2)" : "1px solid oklch(0.45 0.18 200 / 0.2)",
-                        color: isDark ? "oklch(0.65 0.01 260)" : "oklch(0.35 0.01 260)",
+                        background: cyan.replace(")", " / 0.06)"),
+                        border: `1px solid ${cyan.replace(")", " / 0.25)")}`,
+                        color: isDark ? "oklch(0.75 0.01 260)" : "oklch(0.30 0.01 260)",
                       }}
                     >
-                      <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase" as const, fontWeight: 600, color: isDark ? "oklch(0.78 0.18 200)" : "oklch(0.45 0.18 200)" }}>
+                      <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase" as const, fontWeight: 600, color: cyan }}>
                         For Vibecoders ↓
                       </span>
                       <p className="mt-1">{resource.vibecoderNote}</p>
@@ -183,15 +189,18 @@ export default function ResourceVault() {
                       <span
                         key={tag}
                         className="tag-mono"
-                        style={{ background: "oklch(0.14 0.012 260)", color: "oklch(0.38 0.01 260)" }}
+                        style={{
+                          background: isDark ? "oklch(0.14 0.012 260)" : "oklch(0.93 0.005 260)",
+                          color: isDark ? "oklch(0.70 0.01 260)" : "oklch(0.25 0.01 260)",
+                        }}
                       >
                         {tag}
                       </span>
                     ))}
                   </div>
                   {resource.subcategory && (
-                    <div className="pt-3 border-t" style={{ borderColor: "oklch(0.16 0.015 260)" }}>
-                      <span className="tag-mono" style={{ background: "oklch(0.78 0.18 200 / 0.1)", color: "oklch(0.78 0.18 200)" }}>
+                    <div className="pt-3 border-t" style={{ borderColor: isDark ? "oklch(0.18 0.015 260)" : "oklch(0.88 0.006 260)" }}>
+                      <span className="tag-mono" style={{ background: `${cyan}18`, color: cyan, border: `1px solid ${cyan.replace(")", " / 0.3)")}` }}>
                         {resource.subcategory}
                       </span>
                     </div>
@@ -204,7 +213,7 @@ export default function ResourceVault() {
       })}
 
       {filtered.length === 0 && (
-        <div className="text-center py-24" style={{ color: "oklch(0.35 0.01 260)" }}>
+        <div className="text-center py-24" style={{ color: isDark ? "oklch(0.50 0.01 260)" : "oklch(0.40 0.01 260)" }}>
           <p className="text-lg" style={{ fontFamily: "var(--font-display)" }}>No resources found.</p>
           <p className="text-xs mt-2" style={{ fontFamily: "var(--font-mono)" }}>Adjust your search or filter.</p>
         </div>
