@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { ArrowRight, Layers, Cpu, Zap, BookOpen, GitBranch } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import CodeLogo from "@/components/CodeLogo";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -377,7 +378,7 @@ export default function Home() {
       <footer className="py-12 border-t" style={{ borderColor: "oklch(0.22 0.015 260)" }}>
         <div className="container flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <img src="https://d36hbw14aib5lz.cloudfront.net/310419663032046254/8vbHfNLTfUL3Mvpo7dHqU4/logo-icon_5195df88.png" alt="Logo" className="w-6 h-6" />
+            <CodeLogo size={24} />
             <span className="text-sm font-semibold" style={{ fontFamily: "var(--font-display)", color: "oklch(0.55 0.01 260)" }}>
               VIBEHUB — Strategic Resource Hub
             </span>
@@ -389,14 +390,14 @@ export default function Home() {
             className="flex items-center gap-3 group transition-all hover:opacity-80"
           >
             <img
-              src="https://d36hbw14aib5lz.cloudfront.net/310419663032046254/8vbHfNLTfUL3Mvpo7dHqU4/VHGMpicfoto_006cff98.png"
+              src="/victor-garcia.png"
               alt="Dr. Victor Garcia Martinez"
               className="w-8 h-8 rounded-full object-cover object-top"
               style={{ border: "2px solid oklch(0.78 0.18 200 / 0.4)" }}
             />
             <div className="text-right">
               <div className="text-xs font-semibold" style={{ fontFamily: "var(--font-display)", color: "oklch(0.65 0.01 260)" }}>
-                Built by Dr. Victor Garcia Martinez
+                Built by Dr. Victor Garcia M.
               </div>
               <div className="text-xs" style={{ fontFamily: "var(--font-mono)", color: "oklch(0.78 0.18 200)", letterSpacing: "0.05em" }}>
                 48hours.live ↗
