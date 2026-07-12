@@ -182,16 +182,24 @@
 
   /* Glassmorphism card */
   .glass-card {
-    background: oklch(0.12 0.015 260 / 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid oklch(0.78 0.18 200 / 0.15);
+    background: oklch(0.12 0.015 260 / 0.75);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid oklch(0.78 0.18 200 / 0.18);
     transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
   }
+  :root:not(.dark) .glass-card {
+    background: oklch(1 0 0 / 0.88);
+    border: 1px solid oklch(0.45 0.18 200 / 0.22);
+  }
   .glass-card:hover {
-    border-color: oklch(0.78 0.18 200 / 0.45);
-    box-shadow: 0 0 28px oklch(0.78 0.18 200 / 0.14);
+    border-color: oklch(0.78 0.18 200 / 0.5);
+    box-shadow: 0 0 28px oklch(0.78 0.18 200 / 0.15);
     transform: translateY(-2px);
+  }
+  :root:not(.dark) .glass-card:hover {
+    border-color: oklch(0.45 0.18 200 / 0.55);
+    box-shadow: 0 0 28px oklch(0.45 0.18 200 / 0.12);
   }
 
   /* Cyan glow effect */
@@ -217,6 +225,12 @@
 
   /* Animated gradient text */
   .gradient-text {
+    background: linear-gradient(135deg, oklch(0.55 0.18 200), oklch(0.60 0.14 85));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .dark .gradient-text {
     background: linear-gradient(135deg, oklch(0.78 0.18 200), oklch(0.82 0.16 85));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
