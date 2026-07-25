@@ -9,6 +9,7 @@ export const en: TranslationSchema = {
     vibeCoding: "Vibe Coding",
     workflow: "Workflow Map",
     studio: "Briefing Studio",
+    projects: "My Projects",
     switchThemeLight: "Switch to light mode",
     switchThemeDark: "Switch to dark mode",
     switchLang: "Español",

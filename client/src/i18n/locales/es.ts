@@ -7,6 +7,7 @@ export const es = {
     vibeCoding: "Vibe Coding",
     workflow: "Workflow Map",
     studio: "Briefing Studio",
+    projects: "Mis Proyectos",
     switchThemeLight: "Cambiar a modo claro",
     switchThemeDark: "Cambiar a modo oscuro",
     switchLang: "English",

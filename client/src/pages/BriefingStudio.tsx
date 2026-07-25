@@ -62,11 +62,39 @@ export default function BriefingStudio() {
     });
   }, []);
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     const docs = generateAllDocuments(briefing, language);
-    // Store docs in sessionStorage for the DocumentViewer
     sessionStorage.setItem("vibe-hub-docs", JSON.stringify(docs));
     sessionStorage.setItem("vibe-hub-docs-briefing", JSON.stringify(briefing));
+
+    // Save or update project in IndexedDB
+    try {
+      const { saveProject, createSnapshot } = await import("@/storage/db");
+      let projectId = sessionStorage.getItem("vibe-hub-active-project-id");
+
+      if (!projectId) {
+        projectId = `proj_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+        sessionStorage.setItem("vibe-hub-active-project-id", projectId);
+      }
+
+      const projectName = briefing.identity.name.trim() || (isEs ? "Sin Título" : "Untitled Project");
+
+      await saveProject({
+        id: projectId,
+        name: projectName,
+        briefing,
+        documents: docs,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        archived: false,
+        version: 1,
+      });
+
+      await createSnapshot(projectId, briefing, docs, "Document generation");
+    } catch (err) {
+      console.error("Failed to save project to IndexedDB:", err);
+    }
+
     navigate("/documents");
   };
 

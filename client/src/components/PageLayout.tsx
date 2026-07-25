@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Navbar from "./Navbar";
 
 const sideNav = [
+  { href: "/projects", label: "Mis Proyectos", phase: "00" },
   { href: "/architect", label: "Project Architect", phase: "01" },
   { href: "/vault", label: "Resource Vault", phase: "02" },
   { href: "/vibe-coding", label: "Vibe Coding", phase: "03" },

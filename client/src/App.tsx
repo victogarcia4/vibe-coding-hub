@@ -13,6 +13,7 @@ import VibeCoding from "./pages/VibeCoding";
 import WorkflowMap from "./pages/WorkflowMap";
 import BriefingStudio from "./pages/BriefingStudio";
 import DocumentViewer from "./pages/DocumentViewer";
+import ProjectLibrary from "./pages/ProjectLibrary";
 
 function Router() {
   return (
@@ -24,6 +25,7 @@ function Router() {
       <Route path="/workflow" component={WorkflowMap} />
       <Route path="/studio" component={BriefingStudio} />
       <Route path="/documents" component={DocumentViewer} />
+      <Route path="/projects" component={ProjectLibrary} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

@@ -17,6 +17,7 @@ export default function Navbar() {
 
   const navLinks = [
     { href: "/", label: t.nav.home },
+    { href: "/projects", label: t.nav.projects },
     { href: "/architect", label: t.nav.architect },
     { href: "/vault", label: t.nav.vault },
     { href: "/vibe-coding", label: t.nav.vibeCoding },
