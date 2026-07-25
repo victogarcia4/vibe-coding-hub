@@ -10,6 +10,7 @@ export const en: TranslationSchema = {
     workflow: "Workflow Map",
     studio: "Briefing Studio",
     projects: "My Projects",
+    designStudio: "Design Studio",
     switchThemeLight: "Switch to light mode",
     switchThemeDark: "Switch to dark mode",
     switchLang: "Español",

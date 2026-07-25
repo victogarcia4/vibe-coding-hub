@@ -8,6 +8,7 @@ export const es = {
     workflow: "Workflow Map",
     studio: "Briefing Studio",
     projects: "Mis Proyectos",
+    designStudio: "Estudio de Diseño",
     switchThemeLight: "Cambiar a modo claro",
     switchThemeDark: "Cambiar a modo oscuro",
     switchLang: "English",

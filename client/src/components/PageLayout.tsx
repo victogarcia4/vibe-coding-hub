@@ -8,10 +8,11 @@ const sideNav = [
   { href: "/projects", label: "Mis Proyectos", phase: "00" },
   { href: "/architect", label: "Project Architect", phase: "01" },
   { href: "/vault", label: "Resource Vault", phase: "02" },
-  { href: "/vibe-coding", label: "Vibe Coding", phase: "03" },
-  { href: "/workflow", label: "Workflow Map", phase: "04" },
-  { href: "/studio", label: "Briefing Studio", phase: "05" },
-  { href: "/documents", label: "Documents", phase: "06" },
+  { href: "/design-studio", label: "Design Studio", phase: "03" },
+  { href: "/vibe-coding", label: "Vibe Coding", phase: "04" },
+  { href: "/workflow", label: "Workflow Map", phase: "05" },
+  { href: "/studio", label: "Briefing Studio", phase: "06" },
+  { href: "/documents", label: "Documents", phase: "07" },
 ];
 
 interface PageLayoutProps {

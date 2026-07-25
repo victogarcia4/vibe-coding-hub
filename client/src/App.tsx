@@ -14,6 +14,7 @@ import WorkflowMap from "./pages/WorkflowMap";
 import BriefingStudio from "./pages/BriefingStudio";
 import DocumentViewer from "./pages/DocumentViewer";
 import ProjectLibrary from "./pages/ProjectLibrary";
+import DesignStudio from "./pages/DesignStudio";
 import PwaNotification from "./components/PwaNotification";
 
 function Router() {
@@ -27,6 +28,7 @@ function Router() {
       <Route path="/studio" component={BriefingStudio} />
       <Route path="/documents" component={DocumentViewer} />
       <Route path="/projects" component={ProjectLibrary} />
+      <Route path="/design-studio" component={DesignStudio} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
