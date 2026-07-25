@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ExternalLink, Search } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import { resources, categories } from "@/data/resources";
+import { useI18n } from "@/i18n/I18nContext";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -18,6 +19,7 @@ const fadeUp = {
 export default function ResourceVault() {
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [search, setSearch] = useState("");
+  const { t } = useI18n();
 
   const filtered = useMemo(() => {
     return resources.filter((r) => {
@@ -33,8 +35,8 @@ export default function ResourceVault() {
 
   return (
     <PageLayout
-      title="Resource Vault"
-      subtitle="A structured database of 25+ curated tools, libraries, and assets — organized by layer for precision selection."
+      title={t.vault.title}
+      subtitle={t.vault.subtitle}
       phase="02"
     >
       {/* Search + Filter */}
@@ -43,7 +45,7 @@ export default function ResourceVault() {
           <Search size={14} className="text-text-muted" />
           <input
             type="text"
-            placeholder="Search resources..."
+            placeholder={t.vault.searchPlaceholder}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="flex-1 bg-transparent outline-none text-sm font-body text-text-strong placeholder:text-text-subtle"
@@ -58,7 +60,7 @@ export default function ResourceVault() {
                 : "bg-surface-2 text-text-muted border-border-subtle hover:text-text-strong"
             }`}
           >
-            All
+            {t.common.all}
           </button>
           {categories.map((cat) => (
             <button

@@ -4,6 +4,7 @@ import { ArrowDown, BookOpen, Cpu, Database, Zap, FileText, GitBranch, Github, G
 import { Link } from "wouter";
 import PageLayout from "@/components/PageLayout";
 import { useArchitect, ArchitectAnswers } from "@/contexts/ArchitectContext";
+import { useI18n } from "@/i18n/I18nContext";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -115,13 +116,14 @@ const defaultWorkflow: WorkflowStep[] = [
 
 export default function WorkflowMap() {
   const { answers } = useArchitect();
+  const { t } = useI18n();
   const workflowSteps = answers ? buildWorkflow(answers) : defaultWorkflow;
   const isPersonalized = !!answers;
 
   return (
     <PageLayout
-      title="Workflow Integration Map"
-      subtitle={isPersonalized ? "Your personalized step-by-step workflow — generated from your Project Architect answers." : "Complete the Project Architect to get a personalized workflow for your specific project."}
+      title={t.workflow.title}
+      subtitle={isPersonalized ? t.workflow.subtitlePersonalized : t.workflow.subtitleDefault}
       phase="04"
     >
       {/* Personalization banner */}
@@ -134,10 +136,10 @@ export default function WorkflowMap() {
           <AlertCircle size={18} className="text-gold flex-shrink-0" />
           <div>
             <p className="text-sm font-semibold font-display text-text-strong">
-              Showing the default workflow
+              {t.common.showingDefaultWorkflow}
             </p>
             <p className="text-xs mt-0.5 text-text-muted">
-              Complete the <Link href="/architect" className="underline text-gold">Project Architect</Link> to get a workflow tailored to your specific project type, audience, and data requirements.
+              {t.common.completeArchitectPrompt}
             </p>
           </div>
         </motion.div>
@@ -152,11 +154,11 @@ export default function WorkflowMap() {
           <div className="flex items-center gap-3">
             <Zap size={16} className="text-signal" />
             <p className="text-sm font-semibold font-display text-text-strong">
-              Personalized for: {answers.scope.toUpperCase()} · {answers.audience} · {answers.complexity} · {answers.data} data
+              {t.common.personalizedFor}: {answers.scope.toUpperCase()} · {answers.audience} · {answers.complexity} · {answers.data} data
             </p>
           </div>
           <Link href="/architect" className="tag-mono flex-shrink-0 transition-all hover:opacity-80 bg-signal-soft text-signal border border-signal-border">
-            Reconfigure
+            {t.common.reconfigure}
           </Link>
         </motion.div>
       )}

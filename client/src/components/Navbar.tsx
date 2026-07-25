@@ -1,25 +1,31 @@
-// Navbar — Obsidian Architect Design — theme-aware with light/dark toggle
+// Navbar — Obsidian Architect Design — theme-aware with light/dark & i18n language toggle
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X, Sun, Moon, Globe } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useI18n } from "@/i18n/I18nContext";
 import CodeLogo from "./CodeLogo";
-
-const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/architect", label: "Architect" },
-  { href: "/vault", label: "Resource Vault" },
-  { href: "/vibe-coding", label: "Vibe Coding" },
-  { href: "/workflow", label: "Workflow Map" },
-];
 
 export default function Navbar() {
   const [location] = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const { language, setLanguage, t } = useI18n();
   const isDark = theme === "dark";
+
+  const navLinks = [
+    { href: "/", label: t.nav.home },
+    { href: "/architect", label: t.nav.architect },
+    { href: "/vault", label: t.nav.vault },
+    { href: "/vibe-coding", label: t.nav.vibeCoding },
+    { href: "/workflow", label: t.nav.workflow },
+  ];
+
+  const toggleLanguage = () => {
+    setLanguage(language === "es" ? "en" : "es");
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -69,14 +75,24 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Desktop: Theme Toggle + CTA */}
+        {/* Desktop: Language Toggle + Theme Toggle + CTA */}
         <div className="hidden md:flex items-center gap-2">
+          {/* Language Toggle */}
+          <button
+            onClick={toggleLanguage}
+            className="h-9 px-3 rounded-md flex items-center gap-1.5 text-xs font-semibold font-mono transition-all duration-200 hover:scale-105 bg-surface-2 text-text-strong border border-border-subtle"
+            title="Switch Language"
+          >
+            <Globe size={13} className="text-signal" />
+            <span>{language.toUpperCase()}</span>
+          </button>
+
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
             className="w-9 h-9 rounded-md flex items-center justify-center transition-all duration-200 hover:scale-105 bg-surface-2 text-signal border border-border-subtle"
-            aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-            title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            aria-label={isDark ? t.nav.switchThemeLight : t.nav.switchThemeDark}
+            title={isDark ? t.nav.switchThemeLight : t.nav.switchThemeDark}
           >
             {isDark ? <Sun size={16} /> : <Moon size={16} />}
           </button>
@@ -84,16 +100,24 @@ export default function Navbar() {
             href="/architect"
             className="px-4 py-2 rounded-md text-sm font-semibold font-display transition-all duration-200 hover:scale-105 bg-signal text-primary-foreground shadow-xs"
           >
-            Start Building
+            {t.architect.title}
           </Link>
         </div>
 
-        {/* Mobile: Theme Toggle + Menu */}
+        {/* Mobile: Language Toggle + Theme Toggle + Menu */}
         <div className="md:hidden flex items-center gap-2">
+          <button
+            onClick={toggleLanguage}
+            className="h-8 px-2.5 rounded-md flex items-center gap-1 text-xs font-mono font-semibold bg-surface-2 text-text-strong border border-border-subtle"
+          >
+            <Globe size={12} className="text-signal" />
+            <span>{language.toUpperCase()}</span>
+          </button>
+
           <button
             onClick={toggleTheme}
             className="w-8 h-8 rounded-md flex items-center justify-center transition-all bg-surface-2 text-signal border border-border-subtle"
-            aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            aria-label={isDark ? t.nav.switchThemeLight : t.nav.switchThemeDark}
           >
             {isDark ? <Sun size={14} /> : <Moon size={14} />}
           </button>

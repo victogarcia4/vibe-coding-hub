@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ExternalLink, CheckCircle2, XCircle, Star } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import { vibeTools, comparisonMatrix } from "@/data/vibeTools";
+import { useI18n } from "@/i18n/I18nContext";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -17,11 +18,12 @@ const fadeUp = {
 
 export default function VibeCoding() {
   const [activeTab, setActiveTab] = useState<"profiles" | "matrix">("profiles");
+  const { t } = useI18n();
 
   return (
     <PageLayout
-      title="Vibe Coding Masterclass"
-      subtitle="A deep comparative analysis of Manus, Lovable, and Emergent — specifically for PWA and full-stack web development."
+      title={t.vibeCoding.title}
+      subtitle={t.vibeCoding.subtitle}
       phase="03"
     >
       {/* Tab Toggle */}
@@ -36,7 +38,7 @@ export default function VibeCoding() {
                 : "bg-surface-2 text-text-muted border-border-subtle hover:text-text-strong"
             }`}
           >
-            {tab === "profiles" ? "Tool Profiles" : "Comparison Matrix"}
+            {tab === "profiles" ? t.vibeCoding.profilesTab : t.vibeCoding.matrixTab}
           </button>
         ))}
       </div>

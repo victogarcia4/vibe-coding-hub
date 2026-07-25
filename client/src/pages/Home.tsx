@@ -1,9 +1,10 @@
-// Home Page — Obsidian Architect Design — fully theme-aware
+// Home Page — Obsidian Architect Design — fully theme-aware and bilingual
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { ArrowRight, Layers, Cpu, BookOpen, GitBranch } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import CodeLogo from "@/components/CodeLogo";
+import { useI18n } from "@/i18n/I18nContext";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -14,13 +15,6 @@ const fadeUp = {
   }),
 };
 
-const features = [
-  { icon: <Layers size={22} />, title: "Project Architect", description: "Define your project scope, audience, and complexity through an intelligent onboarding wizard.", href: "/architect", color: "text-signal bg-signal-soft border-signal-border" },
-  { icon: <BookOpen size={22} />, title: "Resource Vault", description: "A structured library of 25+ curated tools across front-end, back-end, assets, and inspiration.", href: "/vault", color: "text-gold bg-gold-soft border-gold-border" },
-  { icon: <Cpu size={22} />, title: "Vibe Coding Masterclass", description: "Compare Manus, Lovable, and Emergent with a detailed recommendation matrix for your project.", href: "/vibe-coding", color: "text-signal bg-signal-soft border-signal-border" },
-  { icon: <GitBranch size={22} />, title: "Workflow Integration Map", description: "Visual flow showing where NotebookLM fits as your Technical Researcher in the dev cycle.", href: "/workflow", color: "text-success bg-success-soft border-success-border" },
-];
-
 const stats = [
   { value: "25+", label: "Curated Resources" },
   { value: "3", label: "Vibe Coding Tools" },
@@ -29,6 +23,15 @@ const stats = [
 ];
 
 export default function Home() {
+  const { t } = useI18n();
+
+  const features = [
+    { icon: <Layers size={22} />, title: t.home.feature1Title, description: t.home.feature1Desc, href: "/architect", color: "text-signal bg-signal-soft border-signal-border" },
+    { icon: <BookOpen size={22} />, title: t.vault.title, description: t.vault.subtitle, href: "/vault", color: "text-gold bg-gold-soft border-gold-border" },
+    { icon: <Cpu size={22} />, title: t.vibeCoding.title, description: t.vibeCoding.subtitle, href: "/vibe-coding", color: "text-signal bg-signal-soft border-signal-border" },
+    { icon: <GitBranch size={22} />, title: t.workflow.title, description: t.home.feature3Desc, href: "/workflow", color: "text-success bg-success-soft border-success-border" },
+  ];
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -43,35 +46,33 @@ export default function Home() {
             <motion.div custom={0} variants={fadeUp} initial="hidden" animate="visible"
               className="tag-mono mb-6 inline-block"
             >
-              Strategic Resource Hub v1.0
+              {t.home.heroTag}
             </motion.div>
 
             <motion.h1 custom={1} variants={fadeUp} initial="hidden" animate="visible"
               className="text-5xl md:text-7xl font-bold leading-[1.05] mb-6 font-display text-text-strong tracking-tight"
             >
-              Build Smarter.
+              {t.home.heroTitlePrefix}
               <br />
-              <span className="gradient-text">Ship Faster.</span>
-              <br />
-              Own Your Stack.
+              <span className="gradient-text">{t.home.heroTitleHighlight}</span>
             </motion.h1>
 
             <motion.p custom={2} variants={fadeUp} initial="hidden" animate="visible"
               className="text-lg md:text-xl mb-10 max-w-xl leading-relaxed text-text-muted font-body"
             >
-              The architect's blueprint for modern web builders. Catalog your resources, compare vibe coding tools, and orchestrate your entire PWA development lifecycle with precision.
+              {t.home.heroSubtitle}
             </motion.p>
 
             <motion.div custom={3} variants={fadeUp} initial="hidden" animate="visible" className="flex flex-wrap gap-4">
               <Link href="/architect"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-md font-semibold text-sm font-display transition-all duration-200 hover:scale-105 active:scale-95 bg-signal text-primary-foreground shadow-md cyan-glow"
               >
-                Start Your Architecture <ArrowRight size={16} />
+                {t.home.startArchitectBtn} <ArrowRight size={16} />
               </Link>
               <Link href="/vault"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-md font-semibold text-sm font-display transition-all duration-200 hover:scale-105 active:scale-95 border border-signal-border text-signal bg-signal-soft"
               >
-                Explore the Vault
+                {t.home.exploreVaultBtn}
               </Link>
             </motion.div>
           </div>
@@ -102,10 +103,10 @@ export default function Home() {
           <motion.div custom={0} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="mb-16">
             <div className="h-px mb-6 w-16 bg-gradient-to-r from-signal to-transparent" />
             <h2 className="text-3xl md:text-4xl font-bold mb-4 font-display text-text-strong">
-              Four Pillars of the Hub
+              {t.home.feature1Title} & {t.home.feature2Title}
             </h2>
             <p className="text-base max-w-xl text-text-muted">
-              Every section is engineered to guide you through a specific phase of the modern development lifecycle.
+              {t.home.heroSubtitle}
             </p>
           </motion.div>
 
@@ -123,7 +124,7 @@ export default function Home() {
                   </h3>
                   <p className="text-sm leading-relaxed text-text-muted">{feature.description}</p>
                   <div className="mt-6 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider font-mono text-signal">
-                    Explore <ArrowRight size={12} />
+                    {t.common.continue} <ArrowRight size={12} />
                   </div>
                 </Link>
               </motion.div>
@@ -139,18 +140,18 @@ export default function Home() {
             <motion.div custom={0} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
               <div className="h-px mb-6 w-16 bg-gradient-to-r from-signal to-transparent" />
               <h2 className="text-3xl md:text-4xl font-bold mb-6 font-display text-text-strong">
-                The Vibe Coding<br />
+                {t.vibeCoding.title}<br />
                 <span className="gradient-text">
-                  Recommendation Engine
+                  {t.vibeCoding.matrixTab}
                 </span>
               </h2>
               <p className="text-base leading-relaxed mb-8 text-text-muted">
-                Not all vibe coding tools are created equal. The right tool depends on your project's specific requirements — speed vs. control, frontend quality vs. full-stack automation. Our comparison matrix cuts through the noise.
+                {t.vibeCoding.subtitle}
               </p>
               <Link href="/vibe-coding"
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md text-sm font-semibold font-display transition-all duration-200 hover:scale-105 bg-signal-soft border border-signal-border text-signal"
               >
-                View Comparison Matrix <ArrowRight size={14} />
+                {t.vibeCoding.matrixTab} <ArrowRight size={14} />
               </Link>
             </motion.div>
 
@@ -188,18 +189,18 @@ export default function Home() {
             <div className="absolute inset-0 opacity-5" style={{ backgroundImage: "url(https://d36hbw14aib5lz.cloudfront.net/310419663032046254/8vbHfNLTfUL3Mvpo7dHqU4/workflow-map_91185978.png)", backgroundSize: "cover", backgroundPosition: "center" }} />
             <div className="relative z-10">
               <div className="tag-mono mb-4 inline-block bg-gold-soft border-gold-border text-gold">
-                NotebookLM Strategy
+                {t.workflow.notebookGuideTitle}
               </div>
               <h2 className="text-3xl md:text-4xl font-bold mb-4 font-display text-text-strong">
-                Your AI Technical Researcher
+                {t.workflow.notebookGuideTitle}
               </h2>
               <p className="text-base max-w-2xl mx-auto mb-8 text-text-muted">
-                Learn how to use NotebookLM to ingest official documentation, synthesize architectural patterns, and generate context-aware prompts for your vibe coding agent — before a single line of code is written.
+                {t.workflow.notebookGuideSub}
               </p>
               <Link href="/workflow"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-md font-semibold text-sm font-display transition-all duration-200 hover:scale-105 bg-gold text-primary-foreground shadow-xs"
               >
-                View Workflow Map <ArrowRight size={16} />
+                {t.nav.workflow} <ArrowRight size={16} />
               </Link>
             </div>
           </motion.div>
@@ -212,7 +213,7 @@ export default function Home() {
           <div className="flex items-center gap-3">
             <CodeLogo size={24} />
             <span className="text-sm font-semibold font-display text-text-muted">
-              VIBEHUB — Strategic Resource Hub
+              VIBEHUB — {t.nav.brandSubtitle}
             </span>
           </div>
           <a href="https://48hours.live" target="_blank" rel="noopener noreferrer"

@@ -5,6 +5,7 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { ArchitectProvider } from "./contexts/ArchitectContext";
+import { I18nProvider } from "./i18n/I18nContext";
 import Home from "./pages/Home";
 import ResourceVault from "./pages/ResourceVault";
 import ProjectArchitect from "./pages/ProjectArchitect";
@@ -28,14 +29,16 @@ function Router() {
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider defaultTheme="light" switchable>
-        <ArchitectProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
-        </ArchitectProvider>
-      </ThemeProvider>
+      <I18nProvider>
+        <ThemeProvider defaultTheme="light" switchable>
+          <ArchitectProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Router />
+            </TooltipProvider>
+          </ArchitectProvider>
+        </ThemeProvider>
+      </I18nProvider>
     </ErrorBoundary>
   );
 }

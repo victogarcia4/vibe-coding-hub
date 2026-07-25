@@ -7,6 +7,7 @@ import { ArrowRight, ArrowLeft, CheckCircle2, Zap, ExternalLink, ChefHat, Utensi
 import { Link } from "wouter";
 import PageLayout from "@/components/PageLayout";
 import { useArchitect } from "@/contexts/ArchitectContext";
+import { useI18n } from "@/i18n/I18nContext";
 import {
   projectTypes, goalOptions, audienceOptions, dataNeedOptions,
   generateBlueprint, type Blueprint,
@@ -20,6 +21,7 @@ export default function ProjectArchitect() {
   const [dataNeed, setDataNeed] = useState("");
   const [blueprint, setBlueprint] = useState<Blueprint | null>(null);
   const { setAnswers } = useArchitect();
+  const { t } = useI18n();
 
   const steps = [
     { id: 0, label: "Project Type", icon: <Layers size={14} /> },
@@ -53,8 +55,8 @@ export default function ProjectArchitect() {
 
   return (
     <PageLayout
-      title="The Project Architect"
-      subtitle="Answer 4 questions — get a personalized blueprint with your frontend structure, backend setup, tool recommendation, and step-by-step workflow."
+      title={t.architect.title}
+      subtitle={t.architect.subtitle}
       phase="01"
     >
       {/* Restaurant Metaphor Explainer */}
@@ -70,12 +72,10 @@ export default function ProjectArchitect() {
             </div>
             <div>
               <p className="text-sm font-semibold mb-1 font-display text-text-strong">
-                Think of your app like a restaurant
+                {t.architect.restaurantTitle}
               </p>
               <p className="text-xs leading-relaxed text-text-muted">
-                The <strong className="text-signal">Frontend</strong> is the dining room — everything your users see, touch, and experience.
-                The <strong className="text-gold">Backend</strong> is the kitchen — the hidden logic, storage, and preparation that powers the experience.
-                You don't need to cook — your vibe coding agent does. You just need to know what dish you're ordering.
+                {t.architect.restaurantBody}
               </p>
             </div>
           </div>
