@@ -6,6 +6,7 @@
 **Fecha:** 24 de julio de 2026
 **Repositorio:** https://github.com/victogarcia4/vibe-coding-hub
 **Despliegue:** https://vibe-coding-hub-one.vercel.app/
+**Revisado contra:** commit `965f0d5` (embudo ampliado con 12 tipos de proyecto) — ver §1.3
 
 ---
 
@@ -161,6 +162,120 @@ Medido en el código actual:
 - Etiquetas `tag-mono` con fondos al 8% de opacidad — contraste probablemente por debajo de AA
 - Sin code-splitting: las cinco páginas van en un solo bundle
 - Sin Open Graph, sin `sitemap.xml`, sin `robots.txt`, sin imagen para compartir
+
+---
+
+### 1.3 Revisión posterior al commit `965f0d5`
+
+Este diagnóstico se escribió antes del commit `965f0d5` ("expanded Architect funnel with 12 project
+types + non-tech blueprint"), que reescribió `ProjectArchitect.tsx` por completo (642 líneas
+modificadas) y añadió `client/src/data/architectData.ts` (260 líneas nuevas). Se revisó el código
+resultante. Conclusiones:
+
+#### Lo que mejora (y adelanta trabajo del plan)
+
+`architectData.ts` **es el primer paso correcto hacia `engine/`**. Separa los datos de la UI y ya
+contiene una función pura, `generateBlueprint(projectTypeId, goalId, audienceId, dataNeedId)`, sin
+ninguna dependencia de React. Eso es exactamente la arquitectura que propone §2: lógica pura,
+trivialmente testeable. El catálogo de capacidades de la Fase 3.2 se construirá **sobre este archivo**,
+no desde cero.
+
+El embudo también mejora en producto: 12 tipos de proyecto en lugar de 4 opciones abstractas, con
+lenguaje para no-técnicos y la metáfora del restaurante (frontend = comedor, backend = cocina). Es
+un buen marco conceptual y se conserva.
+
+#### Lo que empeora
+
+**El problema de los colores inline se duplicó, no se redujo.** Recuento actual:
+
+| Archivo | `isDark` | `oklch(` inline |
+|---|---|---|
+| `pages/VibeCoding.tsx` | 34 | 33 |
+| `pages/Home.tsx` | 30 | 34 |
+| `pages/ProjectArchitect.tsx` | 25 | 24 |
+| `pages/ResourceVault.tsx` | 24 | 23 |
+| `components/Navbar.tsx` | 21 | 15 |
+| `components/PageLayout.tsx` | 17 | 16 |
+| `pages/WorkflowMap.tsx` | 15 | 14 |
+| **Total** | **166** | **159** |
+
+La reescritura de `ProjectArchitect.tsx` mantuvo el patrón: 13 constantes de color calculadas a mano
+en las líneas 27–40, y `cyan.replace(")", " / 0.15)")` repetido a lo largo del archivo. La Fase 1
+sigue siendo el prerrequisito, y ahora con más superficie que cubrir.
+
+#### Bug 1 — El contrato entre las dos páginas está roto
+
+`ProjectArchitect.tsx:52-57` escribe en `ArchitectContext` con el **vocabulario nuevo**.
+`WorkflowMap.tsx:26-43` sigue leyendo el **vocabulario viejo**. Los valores no coinciden:
+
+| Campo | Lo que ahora se escribe | Lo que `WorkflowMap` espera | Resultado |
+|---|---|---|---|
+| `scope` | `landing`, `portfolio`, `store`, `saas`, `dashboard`, `crm`, `funnel`, `blog`, `slides`, `mobile`, `pwa`, `booking` | `pwa`, `static`, `dynamic`, `saas` | `static` y `dynamic` **nunca coinciden** |
+| `complexity` | solo `complex` o `moderate` (línea 55) | `simple`, `moderate`, `complex`, `enterprise` | `simple` y `enterprise` son **código muerto** |
+| `data` | `none`, `forms`, `auth`, `content`, `realtime`, `payments` | `realtime`, `relational`, `document`, `minimal` | `relational` y `document` **nunca coinciden** |
+| `audience` | `consumers`, `professionals`, `team`, `creators`, `students` | `consumers`, `developers`, `business`, `internal` | 4 de 5 caen al caso por defecto |
+
+Consecuencias observables: `WorkflowMap` nunca recomienda Emergent (requiere `complexity === "simple"`),
+nunca recomienda Supabase/Neon ni MongoDB (requieren `data === "relational"` / `"document"`), y para
+casi cualquier audiencia muestra las mismas galerías genéricas. La página dice "workflow personalizado"
+y entrega uno degradado.
+
+**Por qué TypeScript no lo detecta:** `ArchitectAnswers` declara los cuatro campos como `string`
+(`contexts/ArchitectContext.tsx:5-10`). El vocabulario válido solo existe en un comentario, que además
+ya está desactualizado. `tsc --noEmit` pasa limpio. Con uniones literales (`type Scope = "landing" | ...`)
+este bug habría sido un error de compilación.
+
+Esto confirma el diagnóstico original desde otro ángulo: la lógica duplicada no solo se desincroniza
+en el texto, se desincroniza en los **datos**. La Fase 3.3 (un único recomendador con tipos estrictos,
+consumido por ambas páginas) resuelve la causa, no el síntoma.
+
+#### Bug 2 — 19 declaraciones CSS inválidas que se descartan en silencio
+
+El idioma de transparencia hexadecimal (`` `${color}18` `` → `#00D4FF18`) se está aplicando a cadenas
+`oklch()`, donde no existe:
+
+```tsx
+// WorkflowMap.tsx:145
+style={{ background: `${gold}10`, border: `1px solid ${gold}35` }}
+// gold === "oklch(0.82 0.16 85)"
+// produce: "oklch(0.82 0.16 85)10"  ← valor inválido
+```
+
+El navegador descarta la declaración completa. Esos fondos y bordes teñidos **no se están pintando**.
+19 ocurrencias en 4 archivos:
+
+| Archivo | Ocurrencias |
+|---|---|
+| `pages/WorkflowMap.tsx` | 14 (líneas 145, 164, 172, 190-192, 194, 208) |
+| `pages/ResourceVault.tsx` | 3 (líneas 104, 151, 203) |
+| `pages/VibeCoding.tsx` | 1 (línea 77) |
+
+Pasó desapercibido porque un fondo transparente sobre una tarjeta oscura casi no se distingue de un
+fondo teñido al 6%. En modo claro la pérdida es más visible. Nótese que el mismo archivo usa las **dos**
+formas — `${cyan}18` (inválida) y `cyan.replace(")", " / 0.3)")` (válida) — a veces en la misma línea
+(`ResourceVault.tsx:151`). Es el síntoma más claro de que falta una única fuente de verdad.
+
+La Fase 1 elimina ambas formas: los tokens semánticos (`--signal-soft`, `--signal-border`) sustituyen
+tanto la concatenación de cadenas como el `.replace()`.
+
+#### Ajustes al plan
+
+1. **§3.1 (Briefing)** — conservar los 12 tipos de proyecto, los 6 objetivos, las 5 audiencias y las
+   6 necesidades de datos de `architectData.ts`; son mejores que las 4 opciones abstractas que iba a
+   proponer. Traducirlos al español y añadir las dos secciones que faltan para llegar a las seis:
+   restricciones (presupuesto, plazo, equipo) y marca/estética.
+2. **§3.2 (Capacidades)** — `generateBlueprint()` es el punto de partida. Su lógica (`needsBackend`,
+   `needsPayments`, `needsAuth`, `isRealtime`) se convierte en capacidades declarativas en lugar de
+   booleanos calculados. Los mapas `frontendStructures`, `styleByAudience`, `animByType` y `costMap`
+   se reutilizan como datos semilla del catálogo.
+3. **§3.3 (Recomendador)** — sube de prioridad. Ya no es solo "eliminar duplicación": es **corregir un
+   bug en producción**. Primer paso obligatorio: cambiar `ArchitectAnswers` de `string` a uniones
+   literales, para que el desajuste se vuelva imposible.
+4. **Fase 1** — añadir a los criterios de hecho: `grep -rn '\${\(cyan\|gold\|green\)}[0-9]' client/src`
+   debe devolver 0 resultados.
+5. Las referencias a líneas de `ProjectArchitect.tsx` en §1.2 corresponden a la versión anterior. Las
+   equivalentes en la versión actual son las líneas 27–40 (constantes de color) y 120–130, 142, 156–158
+   (`.replace()` para transparencias).
 
 ---
 
