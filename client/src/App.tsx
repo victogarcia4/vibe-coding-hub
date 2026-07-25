@@ -14,6 +14,7 @@ import WorkflowMap from "./pages/WorkflowMap";
 import BriefingStudio from "./pages/BriefingStudio";
 import DocumentViewer from "./pages/DocumentViewer";
 import ProjectLibrary from "./pages/ProjectLibrary";
+import PwaNotification from "./components/PwaNotification";
 
 function Router() {
   return (
@@ -40,6 +41,7 @@ function App() {
           <ArchitectProvider>
             <TooltipProvider>
               <Toaster />
+              <PwaNotification />
               <Router />
             </TooltipProvider>
           </ArchitectProvider>
