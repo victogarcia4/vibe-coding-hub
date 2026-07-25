@@ -11,6 +11,8 @@ import ResourceVault from "./pages/ResourceVault";
 import ProjectArchitect from "./pages/ProjectArchitect";
 import VibeCoding from "./pages/VibeCoding";
 import WorkflowMap from "./pages/WorkflowMap";
+import BriefingStudio from "./pages/BriefingStudio";
+import DocumentViewer from "./pages/DocumentViewer";
 
 function Router() {
   return (
@@ -20,6 +22,8 @@ function Router() {
       <Route path="/architect" component={ProjectArchitect} />
       <Route path="/vibe-coding" component={VibeCoding} />
       <Route path="/workflow" component={WorkflowMap} />
+      <Route path="/studio" component={BriefingStudio} />
+      <Route path="/documents" component={DocumentViewer} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

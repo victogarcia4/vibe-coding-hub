@@ -21,6 +21,7 @@ export default function Navbar() {
     { href: "/vault", label: t.nav.vault },
     { href: "/vibe-coding", label: t.nav.vibeCoding },
     { href: "/workflow", label: t.nav.workflow },
+    { href: "/studio", label: t.nav.studio },
   ];
 
   const toggleLanguage = () => {

@@ -6,6 +6,7 @@ export const es = {
     vault: "Resource Vault",
     vibeCoding: "Vibe Coding",
     workflow: "Workflow Map",
+    studio: "Briefing Studio",
     switchThemeLight: "Cambiar a modo claro",
     switchThemeDark: "Cambiar a modo oscuro",
     switchLang: "English",

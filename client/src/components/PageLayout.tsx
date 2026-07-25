@@ -9,6 +9,8 @@ const sideNav = [
   { href: "/vault", label: "Resource Vault", phase: "02" },
   { href: "/vibe-coding", label: "Vibe Coding", phase: "03" },
   { href: "/workflow", label: "Workflow Map", phase: "04" },
+  { href: "/studio", label: "Briefing Studio", phase: "05" },
+  { href: "/documents", label: "Documents", phase: "06" },
 ];
 
 interface PageLayoutProps {

@@ -8,6 +8,7 @@ export const en: TranslationSchema = {
     vault: "Resource Vault",
     vibeCoding: "Vibe Coding",
     workflow: "Workflow Map",
+    studio: "Briefing Studio",
     switchThemeLight: "Switch to light mode",
     switchThemeDark: "Switch to dark mode",
     switchLang: "Español",
