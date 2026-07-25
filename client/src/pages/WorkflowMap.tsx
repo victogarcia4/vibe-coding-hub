@@ -4,7 +4,6 @@ import { ArrowDown, BookOpen, Cpu, Database, Zap, FileText, GitBranch, Github, G
 import { Link } from "wouter";
 import PageLayout from "@/components/PageLayout";
 import { useArchitect, ArchitectAnswers } from "@/contexts/ArchitectContext";
-import { useTheme } from "@/contexts/ThemeContext";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -93,7 +92,7 @@ function buildWorkflow(a: ArchitectAnswers): WorkflowStep[] {
       isDeploy: true,
     },
     {
-      phase: "07", title: "Iterate & Refine",
+      phase: "07", title: "Iteration & Refinement",
       tool: vibeTool === "Lovable" ? "Lovable Visual Editor" : vibeTool,
       description: `${vibeTool === "Lovable" ? "Use Lovable's visual editor to tweak layouts, colors, and components without re-prompting. For logic changes, describe them in chat." : vibeTool === "Manus" ? "Describe changes to Manus — it will update the codebase, commit to GitHub, and your live site on Vercel/Netlify updates within seconds." : "Re-prompt Emergent with change requests. For deeper customization, export the code to GitHub and continue with Lovable or Manus."} Use NotebookLM to diagnose any errors: paste the error log and ask 'Based on the ${database || "stack"} docs, what is causing this?'`,
       icon: <GitBranch size={18} />,
@@ -116,19 +115,8 @@ const defaultWorkflow: WorkflowStep[] = [
 
 export default function WorkflowMap() {
   const { answers } = useArchitect();
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
-
   const workflowSteps = answers ? buildWorkflow(answers) : defaultWorkflow;
   const isPersonalized = !!answers;
-
-  const cyan = isDark ? "oklch(0.78 0.18 200)" : "oklch(0.45 0.18 200)";
-  const gold = isDark ? "oklch(0.82 0.16 85)" : "oklch(0.60 0.14 85)";
-  const green = isDark ? "oklch(0.70 0.18 160)" : "oklch(0.52 0.18 160)";
-  const cardBg = isDark ? "oklch(0.11 0.013 260)" : "oklch(1 0 0)";
-  const cardBorder = isDark ? "oklch(0.18 0.015 260)" : "oklch(0.88 0.006 260)";
-  const textMuted = isDark ? "oklch(0.45 0.01 260)" : "oklch(0.50 0.01 260)";
-  const textBody = isDark ? "oklch(0.48 0.01 260)" : "oklch(0.40 0.01 260)";
 
   return (
     <PageLayout
@@ -141,16 +129,15 @@ export default function WorkflowMap() {
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8 p-4 rounded-xl flex items-center gap-4"
-          style={{ background: `${gold}10`, border: `1px solid ${gold}35` }}
+          className="mb-8 p-4 rounded-xl flex items-center gap-4 bg-gold-soft border border-gold-border"
         >
-          <AlertCircle size={18} style={{ color: gold, flexShrink: 0 }} />
+          <AlertCircle size={18} className="text-gold flex-shrink-0" />
           <div>
-            <p className="text-sm font-semibold" style={{ fontFamily: "var(--font-display)", color: isDark ? "oklch(0.85 0.005 260)" : "oklch(0.20 0.015 260)" }}>
+            <p className="text-sm font-semibold font-display text-text-strong">
               Showing the default workflow
             </p>
-            <p className="text-xs mt-0.5" style={{ color: textMuted }}>
-              Complete the <Link href="/architect" className="underline" style={{ color: gold }}>Project Architect</Link> to get a workflow tailored to your specific project type, audience, and data requirements.
+            <p className="text-xs mt-0.5 text-text-muted">
+              Complete the <Link href="/architect" className="underline text-gold">Project Architect</Link> to get a workflow tailored to your specific project type, audience, and data requirements.
             </p>
           </div>
         </motion.div>
@@ -160,16 +147,15 @@ export default function WorkflowMap() {
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8 p-4 rounded-xl flex items-center justify-between gap-4"
-          style={{ background: `${cyan}08`, border: `1px solid ${cyan}30` }}
+          className="mb-8 p-4 rounded-xl flex items-center justify-between gap-4 bg-signal-soft border border-signal-border"
         >
           <div className="flex items-center gap-3">
-            <Zap size={16} style={{ color: cyan }} />
-            <p className="text-sm font-semibold" style={{ fontFamily: "var(--font-display)", color: isDark ? "oklch(0.85 0.005 260)" : "oklch(0.20 0.015 260)" }}>
+            <Zap size={16} className="text-signal" />
+            <p className="text-sm font-semibold font-display text-text-strong">
               Personalized for: {answers.scope.toUpperCase()} · {answers.audience} · {answers.complexity} · {answers.data} data
             </p>
           </div>
-          <Link href="/architect" className="tag-mono flex-shrink-0 transition-all hover:opacity-80" style={{ background: `${cyan}12`, color: cyan, border: `1px solid ${cyan}30` }}>
+          <Link href="/architect" className="tag-mono flex-shrink-0 transition-all hover:opacity-80 bg-signal-soft text-signal border border-signal-border">
             Reconfigure
           </Link>
         </motion.div>
@@ -180,32 +166,35 @@ export default function WorkflowMap() {
         {workflowSteps.map((step, i) => (
           <motion.div key={step.phase} custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <div
-              className="rounded-2xl p-7 relative"
-              style={{
-                background: cardBg,
-                border: `1px solid ${step.isGithub ? gold.replace(")", " / 0.4)") : step.isDeploy ? green.replace(")", " / 0.4)") : step.highlight ? cyan.replace(")", " / 0.4)") : cardBorder}`,
-                boxShadow: step.isGithub ? `0 0 24px ${gold.replace(")", " / 0.08)")}` : step.isDeploy ? `0 0 24px ${green.replace(")", " / 0.08)")}` : step.highlight ? `0 0 24px ${cyan.replace(")", " / 0.1)")}` : "none",
-              }}
+              className={`rounded-2xl p-7 relative glass-card ${
+                step.isGithub
+                  ? "border-gold-border"
+                  : step.isDeploy
+                  ? "border-success-border"
+                  : step.highlight
+                  ? "border-signal-border"
+                  : ""
+              }`}
             >
-              {step.highlight && <div className="absolute top-4 right-4 tag-mono" style={{ background: `${cyan}12`, color: cyan, border: `1px solid ${cyan}28` }}>Core Step</div>}
-              {step.isGithub && <div className="absolute top-4 right-4 tag-mono" style={{ background: `${gold}12`, color: gold, border: `1px solid ${gold}30` }}>Required</div>}
-              {step.isDeploy && <div className="absolute top-4 right-4 tag-mono" style={{ background: `${green}12`, color: green, border: `1px solid ${green}30` }}>Go Live</div>}
+              {step.highlight && <div className="absolute top-4 right-4 tag-mono bg-signal-soft text-signal border border-signal-border">Core Step</div>}
+              {step.isGithub && <div className="absolute top-4 right-4 tag-mono bg-gold-soft text-gold border border-gold-border">Required</div>}
+              {step.isDeploy && <div className="absolute top-4 right-4 tag-mono bg-success-soft text-success border border-success-border">Go Live</div>}
               <div className="flex items-start gap-5">
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: `${cyan}12`, color: cyan }}>
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 bg-signal-soft text-signal border border-signal-border">
                   {step.icon}
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-1">
-                    <span className="text-xs font-bold" style={{ fontFamily: "var(--font-mono)", color: cyan }}>PHASE {step.phase}</span>
-                    <span className="tag-mono" style={{ background: isDark ? "oklch(0.14 0.012 260)" : "oklch(0.93 0.005 260)", color: textMuted }}>{step.tool}</span>
+                    <span className="text-xs font-bold font-mono text-signal">PHASE {step.phase}</span>
+                    <span className="tag-mono bg-surface-2 text-text-muted border-border-subtle">{step.tool}</span>
                   </div>
-                  <h3 className="text-lg font-bold mb-2" style={{ fontFamily: "var(--font-display)", color: isDark ? "oklch(0.92 0.005 260)" : "oklch(0.12 0.015 260)", letterSpacing: "-0.01em" }}>
+                  <h3 className="text-lg font-bold mb-2 font-display text-text-strong tracking-tight">
                     {step.title}
                   </h3>
-                  <p className="text-sm leading-relaxed mb-4" style={{ color: textBody }}>{step.description}</p>
+                  <p className="text-sm leading-relaxed mb-4 text-text-muted">{step.description}</p>
                   <div className="flex flex-wrap gap-2">
                     {step.outputs.map((output) => (
-                      <span key={output} className="tag-mono" style={{ background: `${cyan}08`, color: cyan, border: `1px solid ${cyan}20` }}>→ {output}</span>
+                      <span key={output} className="tag-mono bg-signal-soft text-signal border border-signal-border">→ {output}</span>
                     ))}
                   </div>
                 </div>
@@ -213,7 +202,7 @@ export default function WorkflowMap() {
             </div>
             {i < workflowSteps.length - 1 && (
               <div className="flex justify-start ml-12 my-2">
-                <ArrowDown size={14} style={{ color: isDark ? "oklch(0.25 0.01 260)" : "oklch(0.70 0.01 260)" }} />
+                <ArrowDown size={14} className="text-text-subtle" />
               </div>
             )}
           </motion.div>
@@ -222,14 +211,14 @@ export default function WorkflowMap() {
 
       {/* NotebookLM Strategy */}
       <div className="mb-16">
-        <div className="h-px mb-10" style={{ background: `linear-gradient(90deg, ${cyan.replace(")", " / 0.5)")}, transparent)` }} />
+        <div className="h-px mb-10 bg-gradient-to-r from-signal-border to-transparent" />
         <div className="flex items-center gap-3 mb-3">
-          <Zap size={18} style={{ color: cyan }} />
-          <h2 className="text-2xl font-bold" style={{ fontFamily: "var(--font-display)", color: isDark ? "oklch(0.97 0.005 260)" : "oklch(0.12 0.015 260)", letterSpacing: "-0.02em" }}>
+          <Zap size={18} className="text-signal" />
+          <h2 className="text-2xl font-bold font-display text-text-strong tracking-tight">
             NotebookLM Strategy Guide
           </h2>
         </div>
-        <p className="text-sm mb-8 max-w-xl" style={{ color: textBody }}>
+        <p className="text-sm mb-8 max-w-xl text-text-muted">
           NotebookLM acts as your "Technical Researcher" — transforming raw documentation into precise, actionable prompts for your vibe coding agent.
         </p>
         <div className="grid sm:grid-cols-2 gap-3">
@@ -240,12 +229,13 @@ export default function WorkflowMap() {
             { title: "Prompt Synthesis", description: "Extract the NotebookLM answer and use it verbatim as context in your Manus or Lovable prompt for source-grounded execution.", icon: "✦" },
           ].map((tip, i) => (
             <motion.div key={tip.title} custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
-              className="rounded-xl p-6" style={{ background: cardBg, border: `1px solid ${cardBorder}` }}>
+              className="glass-card rounded-xl p-6"
+            >
               <div className="flex items-center gap-3 mb-3">
-                <span className="text-lg" style={{ color: cyan }}>{tip.icon}</span>
-                <h3 className="font-semibold text-sm" style={{ fontFamily: "var(--font-display)", color: isDark ? "oklch(0.85 0.005 260)" : "oklch(0.20 0.015 260)" }}>{tip.title}</h3>
+                <span className="text-lg text-signal">{tip.icon}</span>
+                <h3 className="font-semibold text-sm font-display text-text-strong">{tip.title}</h3>
               </div>
-              <p className="text-xs leading-relaxed" style={{ color: textMuted }}>{tip.description}</p>
+              <p className="text-xs leading-relaxed text-text-muted">{tip.description}</p>
             </motion.div>
           ))}
         </div>

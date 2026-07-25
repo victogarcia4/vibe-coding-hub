@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { ExternalLink, CheckCircle2, XCircle, Star } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import { vibeTools, comparisonMatrix } from "@/data/vibeTools";
-import { useTheme } from "@/contexts/ThemeContext";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -18,11 +17,6 @@ const fadeUp = {
 
 export default function VibeCoding() {
   const [activeTab, setActiveTab] = useState<"profiles" | "matrix">("profiles");
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
-
-  const cyan = isDark ? "oklch(0.78 0.18 200)" : "oklch(0.45 0.18 200)";
-  const gold = isDark ? "oklch(0.82 0.16 85)" : "oklch(0.55 0.14 85)";
 
   return (
     <PageLayout
@@ -36,13 +30,11 @@ export default function VibeCoding() {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className="px-5 py-2 rounded-md text-sm font-semibold transition-all"
-            style={{
-              fontFamily: "var(--font-display)",
-              background: activeTab === tab ? cyan : (isDark ? "oklch(0.11 0.013 260)" : "oklch(0.95 0.005 260)"),
-              color: activeTab === tab ? (isDark ? "oklch(0.08 0.01 260)" : "oklch(0.98 0 0)") : (isDark ? "oklch(0.45 0.01 260)" : "oklch(0.30 0.01 260)"),
-              border: `1px solid ${activeTab === tab ? cyan : (isDark ? "oklch(0.18 0.015 260)" : "oklch(0.88 0.006 260)")}`,
-            }}
+            className={`px-5 py-2 rounded-md text-sm font-semibold font-display transition-all border ${
+              activeTab === tab
+                ? "bg-signal text-primary-foreground border-signal"
+                : "bg-surface-2 text-text-muted border-border-subtle hover:text-text-strong"
+            }`}
           >
             {tab === "profiles" ? "Tool Profiles" : "Comparison Matrix"}
           </button>
@@ -59,66 +51,58 @@ export default function VibeCoding() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              className="rounded-2xl p-8"
-              style={{
-                background: isDark ? "oklch(0.11 0.013 260)" : "oklch(1 0 0)",
-                border: isDark ? "1px solid oklch(0.18 0.015 260)" : "1px solid oklch(0.88 0.006 260)",
-              }}
+              className="glass-card rounded-2xl p-8"
             >
               <div className="flex flex-col md:flex-row md:items-start gap-6">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <h2
-                      className="text-2xl font-bold"
-                      style={{ fontFamily: "var(--font-display)", color: cyan, letterSpacing: "-0.02em" }}
-                    >
+                    <h2 className="text-2xl font-bold font-display text-signal tracking-tight">
                       {tool.name}
                     </h2>
-                    <span className="tag-mono" style={{ background: `${cyan}18`, color: cyan, border: `1px solid ${cyan.replace(")", " / 0.35)")}` }}>
+                    <span className="tag-mono bg-signal-soft text-signal border border-signal-border">
                       {tool.badge}
                     </span>
                   </div>
-                  <p className="text-sm mb-4" style={{ color: isDark ? "oklch(0.65 0.01 260)" : "oklch(0.30 0.01 260)", fontFamily: "var(--font-display)", fontStyle: "italic" }}>
+                  <p className="text-sm mb-4 text-text-muted font-display italic">
                     {tool.tagline}
                   </p>
-                  <p className="text-sm leading-relaxed mb-6" style={{ color: isDark ? "oklch(0.60 0.01 260)" : "oklch(0.35 0.01 260)" }}>
+                  <p className="text-sm leading-relaxed mb-6 text-text-muted">
                     {tool.description}
                   </p>
                   <div className="flex items-center gap-3 mb-6">
-                    <span className="text-xs" style={{ fontFamily: "var(--font-mono)", color: isDark ? "oklch(0.55 0.01 260)" : "oklch(0.40 0.01 260)" }}>PWA SUITABILITY</span>
+                    <span className="text-xs font-mono text-text-subtle">PWA SUITABILITY</span>
                     <div className="flex gap-1">
                       {[1, 2, 3, 4, 5].map((s) => (
                         <Star
                           key={s}
                           size={12}
-                          fill={s <= tool.pwaRating ? cyan : "transparent"}
-                          style={{ color: s <= tool.pwaRating ? cyan : (isDark ? "oklch(0.22 0.015 260)" : "oklch(0.80 0.006 260)") }}
+                          className={s <= tool.pwaRating ? "text-signal fill-signal" : "text-border-strong"}
                         />
                       ))}
                     </div>
                   </div>
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <h4 className="text-xs font-semibold mb-3 uppercase tracking-widest" style={{ fontFamily: "var(--font-mono)", color: isDark ? "oklch(0.55 0.01 260)" : "oklch(0.40 0.01 260)" }}>
+                      <h4 className="text-xs font-semibold mb-3 uppercase tracking-widest font-mono text-text-subtle">
                         Strengths
                       </h4>
                       <ul className="space-y-2">
                         {tool.strengths.map((s) => (
-                          <li key={s} className="flex items-start gap-2 text-xs" style={{ color: isDark ? "oklch(0.70 0.01 260)" : "oklch(0.30 0.01 260)" }}>
-                            <CheckCircle2 size={11} className="mt-0.5 flex-shrink-0" style={{ color: cyan }} />
+                          <li key={s} className="flex items-start gap-2 text-xs text-text-muted">
+                            <CheckCircle2 size={11} className="mt-0.5 flex-shrink-0 text-signal" />
                             {s}
                           </li>
                         ))}
                       </ul>
                     </div>
                     <div>
-                      <h4 className="text-xs font-semibold mb-3 uppercase tracking-widest" style={{ fontFamily: "var(--font-mono)", color: isDark ? "oklch(0.55 0.01 260)" : "oklch(0.40 0.01 260)" }}>
+                      <h4 className="text-xs font-semibold mb-3 uppercase tracking-widest font-mono text-text-subtle">
                         Limitations
                       </h4>
                       <ul className="space-y-2">
                         {tool.weaknesses.map((w) => (
-                          <li key={w} className="flex items-start gap-2 text-xs" style={{ color: isDark ? "oklch(0.65 0.01 260)" : "oklch(0.35 0.01 260)" }}>
-                            <XCircle size={11} className="mt-0.5 flex-shrink-0" style={{ color: isDark ? "oklch(0.40 0.01 260)" : "oklch(0.60 0.01 260)" }} />
+                          <li key={w} className="flex items-start gap-2 text-xs text-text-subtle">
+                            <XCircle size={11} className="mt-0.5 flex-shrink-0 text-text-subtle" />
                             {w}
                           </li>
                         ))}
@@ -127,25 +111,19 @@ export default function VibeCoding() {
                   </div>
                 </div>
                 <div className="md:w-56 flex-shrink-0">
-                  <div
-                    className="p-5 rounded-xl"
-                    style={{
-                      background: cyan.replace(")", " / 0.06)"),
-                      border: `1px solid ${cyan.replace(")", " / 0.25)")}`,
-                    }}
-                  >
-                    <h4 className="text-xs font-semibold mb-3 uppercase tracking-widest" style={{ fontFamily: "var(--font-mono)", color: isDark ? "oklch(0.55 0.01 260)" : "oklch(0.40 0.01 260)" }}>
+                  <div className="p-5 rounded-xl bg-signal-soft border border-signal-border">
+                    <h4 className="text-xs font-semibold mb-3 uppercase tracking-widest font-mono text-text-subtle">
                       Best For
                     </h4>
                     <ul className="space-y-2 mb-4">
                       {tool.bestFor.map((b) => (
-                        <li key={b} className="text-xs" style={{ color: isDark ? "oklch(0.70 0.01 260)" : "oklch(0.30 0.01 260)" }}>
+                        <li key={b} className="text-xs text-text-muted">
                           → {b}
                         </li>
                       ))}
                     </ul>
-                    <div className="pt-4 border-t mb-3" style={{ borderColor: isDark ? "oklch(0.18 0.015 260)" : "oklch(0.88 0.006 260)" }}>
-                      <span className="text-xs" style={{ fontFamily: "var(--font-mono)", color: isDark ? "oklch(0.60 0.01 260)" : "oklch(0.35 0.01 260)" }}>
+                    <div className="pt-4 border-t border-border-subtle mb-3">
+                      <span className="text-xs font-mono text-text-subtle">
                         {tool.pricing}
                       </span>
                     </div>
@@ -154,44 +132,33 @@ export default function VibeCoding() {
                       {tool.pricingTiers.map((tier) => (
                         <div
                           key={tier.label}
-                          className="p-2 rounded-lg"
-                          style={{
-                            background: isDark ? "oklch(0.14 0.012 260)" : "oklch(0.96 0.005 260)",
-                            border: isDark ? "1px solid oklch(0.20 0.015 260)" : "1px solid oklch(0.88 0.006 260)",
-                          }}
+                          className="p-2 rounded-lg bg-surface-2 border border-border-subtle"
                         >
                           <div className="flex items-center justify-between mb-0.5">
-                            <span style={{ fontFamily: "var(--font-display)", color: cyan, fontSize: "0.65rem", fontWeight: 700 }}>
+                            <span className="font-display text-signal text-[0.65rem] font-bold">
                               {tier.label}
                             </span>
-                            <span style={{ fontFamily: "var(--font-mono)", color: isDark ? "oklch(0.85 0.005 260)" : "oklch(0.20 0.015 260)", fontSize: "0.65rem", fontWeight: 700 }}>
+                            <span className="font-mono text-text-strong text-[0.65rem] font-bold">
                               {tier.monthly}
                             </span>
                           </div>
-                          <div style={{ color: isDark ? "oklch(0.55 0.01 260)" : "oklch(0.40 0.01 260)", fontSize: "0.6rem" }}>
+                          <div className="text-text-subtle text-[0.6rem]">
                             {tier.credits}
                           </div>
                         </div>
                       ))}
                     </div>
-                    <div
-                      className="mb-3 p-2 rounded-lg"
-                      style={{
-                        background: cyan.replace(")", " / 0.06)"),
-                        border: `1px solid ${cyan.replace(")", " / 0.25)")}`,
-                      }}
-                    >
-                      <div style={{ fontFamily: "var(--font-mono)", letterSpacing: "0.08em", textTransform: "uppercase", fontWeight: 600, color: cyan, fontSize: "0.58rem" }}>
+                    <div className="mb-3 p-2 rounded-lg bg-signal-soft border border-signal-border">
+                      <div className="font-mono tracking-wider uppercase font-semibold text-signal text-[0.58rem]">
                         Est. Project Cost ↓
                       </div>
-                      <p style={{ color: isDark ? "oklch(0.70 0.01 260)" : "oklch(0.30 0.01 260)", fontSize: "0.62rem", marginTop: "0.25rem", lineHeight: 1.5 }}>{tool.typicalProjectCost}</p>
+                      <p className="text-text-muted text-[0.62rem] mt-1 leading-normal">{tool.typicalProjectCost}</p>
                     </div>
                     <a
                       href={tool.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-xs font-semibold transition-all hover:gap-3"
-                      style={{ fontFamily: "var(--font-display)", color: cyan }}
+                      className="flex items-center gap-2 text-xs font-semibold font-display text-signal transition-all hover:gap-3"
                     >
                       Visit {tool.name} <ExternalLink size={11} />
                     </a>
@@ -209,25 +176,18 @@ export default function VibeCoding() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <div
-            className="rounded-2xl overflow-hidden"
-            style={{ background: isDark ? "oklch(0.11 0.013 260)" : "oklch(1 0 0)", border: isDark ? "1px solid oklch(0.18 0.015 260)" : "1px solid oklch(0.88 0.006 260)" }}
-          >
+          <div className="glass-card rounded-2xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr style={{ borderBottom: `1px solid ${isDark ? "oklch(0.18 0.015 260)" : "oklch(0.88 0.006 260)"}` }}>
-                    <th
-                      className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-widest"
-                      style={{ fontFamily: "var(--font-mono)", color: isDark ? "oklch(0.55 0.01 260)" : "oklch(0.40 0.01 260)", minWidth: 160 }}
-                    >
+                  <tr className="border-b border-border-subtle">
+                    <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-widest font-mono text-text-subtle min-w-[160px]">
                       Criterion
                     </th>
                     {vibeTools.map((t) => (
                       <th
                         key={t.id}
-                        className="text-left px-6 py-4 text-sm font-bold"
-                        style={{ fontFamily: "var(--font-display)", color: cyan, minWidth: 190 }}
+                        className="text-left px-6 py-4 text-sm font-bold font-display text-signal min-w-[190px]"
                       >
                         {t.name}
                       </th>
@@ -238,13 +198,10 @@ export default function VibeCoding() {
                   {comparisonMatrix.map((row, i) => (
                     <tr
                       key={row.criterion}
-                      style={{
-                        borderBottom: `1px solid ${isDark ? "oklch(0.16 0.015 260 / 0.6)" : "oklch(0.88 0.006 260 / 0.6)"}`,
-                        background: i % 2 === 0 ? "transparent" : (isDark ? "oklch(0.09 0.011 260 / 0.5)" : "oklch(0.96 0.005 260 / 0.5)"),
-                      }}
+                      className={`border-b border-border-subtle/60 ${i % 2 === 0 ? "bg-transparent" : "bg-surface-2/50"}`}
                     >
                       <td className="px-6 py-4">
-                        <span className="text-xs font-semibold" style={{ fontFamily: "var(--font-display)", color: isDark ? "oklch(0.65 0.01 260)" : "oklch(0.30 0.01 260)" }}>
+                        <span className="text-xs font-semibold font-display text-text-muted">
                           {row.criterion}
                         </span>
                       </td>
@@ -254,14 +211,10 @@ export default function VibeCoding() {
                           <td key={toolId} className="px-6 py-4">
                             <div className="flex items-start gap-2">
                               {isWinner && (
-                                <Star size={11} fill={cyan} style={{ color: cyan, flexShrink: 0, marginTop: 2 }} />
+                                <Star size={11} className="text-signal fill-signal flex-shrink-0 mt-0.5" />
                               )}
                               <span
-                                className="text-xs"
-                                style={{
-                                  color: isWinner ? (isDark ? "oklch(0.85 0.005 260)" : "oklch(0.15 0.015 260)") : (isDark ? "oklch(0.45 0.01 260)" : "oklch(0.45 0.01 260)"),
-                                  fontWeight: isWinner ? 600 : 400,
-                                }}
+                                className={`text-xs ${isWinner ? "text-text-strong font-semibold" : "text-text-muted"}`}
                               >
                                 {row[toolId]}
                               </span>
@@ -275,7 +228,7 @@ export default function VibeCoding() {
               </table>
             </div>
           </div>
-          <p className="text-xs mt-4" style={{ fontFamily: "var(--font-mono)", color: isDark ? "oklch(0.55 0.01 260)" : "oklch(0.40 0.01 260)" }}>
+          <p className="text-xs mt-4 font-mono text-text-subtle">
             ★ indicates the recommended tool for each criterion.
           </p>
         </motion.div>
