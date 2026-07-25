@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 
   <head>
     <meta charset="UTF-8" />
@@ -7,6 +7,9 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1" />
     <title>Vibe Coding Hub — Estudio de Arquitectura de Producto</title>
+    <meta name="description" content="Estudio de arquitectura de producto para vibe coding. Diseña briefings, evalúa stacks técnicos y genera PRD, TRD, Plan de Acción, Brief UX/UI y Prompts para agentes de IA." />
+
+    <!-- PWA & Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="theme-color" content="#0f172a" />
@@ -15,6 +18,21 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="author" content="Dr. Victor Garcia Martinez" />
     <meta name="color-scheme" content="light dark" />
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Vibe Coding Hub" />
+    <meta property="og:title" content="Vibe Coding Hub — Estudio de Arquitectura de Producto" />
+    <meta property="og:description" content="Diseña la arquitectura de tu aplicación web en minutos. Genera PRD, TRD, Plan de Acción, Brief UX/UI y Prompts para agentes de IA." />
+    <meta property="og:image" content="https://vibe-coding-hub.vercel.app/og-image.png" />
+    <meta property="og:url" content="https://vibe-coding-hub.vercel.app/" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Vibe Coding Hub — Estudio de Arquitectura de Producto" />
+    <meta name="twitter:description" content="Diseña la arquitectura de tu aplicación web en minutos. Genera PRD, TRD, Plan de Acción, Brief UX/UI y Prompts para agentes." />
+    <meta name="twitter:image" content="https://vibe-coding-hub.vercel.app/og-image.png" />
+
     <script>
       (function() {
         var stored = localStorage.getItem("theme");
@@ -29,6 +47,10 @@
   </head>
 
   <body>
+    <!-- Accessibility Skip Link -->
+    <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:p-3 focus:bg-signal focus:text-primary-foreground focus:rounded-lg">
+      Saltar al contenido principal / Skip to main content
+    </a>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

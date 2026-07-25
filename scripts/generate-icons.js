@@ -125,5 +125,6 @@ fs.writeFileSync(path.join(outDir, "pwa-192x192.png"), createPng(192, 192, (x, y
 fs.writeFileSync(path.join(outDir, "pwa-512x512.png"), createPng(512, 512, (x, y, w, h) => drawBrandIcon(x, y, w, h, false)));
 fs.writeFileSync(path.join(outDir, "maskable-icon-512x512.png"), createPng(512, 512, (x, y, w, h) => drawBrandIcon(x, y, w, h, true)));
 fs.writeFileSync(path.join(outDir, "apple-touch-icon.png"), createPng(180, 180, (x, y, w, h) => drawBrandIcon(x, y, w, h, false)));
+fs.writeFileSync(path.join(outDir, "og-image.png"), createPng(1200, 630, (x, y, w, h) => drawBrandIcon(x, y, w, h, true)));
 
-console.log("Successfully generated all PWA icons in client/public!");
+console.log("Successfully generated all PWA icons & OG image in client/public!");

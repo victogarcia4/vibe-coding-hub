@@ -74,7 +74,7 @@ export default function PageLayout({ children, title, subtitle, phase }: PageLay
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 min-w-0">
+        <main id="main-content" className="flex-1 min-w-0">
           <div className="px-8 lg:px-12 pt-12 pb-10 border-b border-border-subtle">
             {phase && <div className="tag-mono mb-3 text-signal">Phase {phase}</div>}
             <motion.h1
