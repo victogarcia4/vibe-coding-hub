@@ -61,10 +61,7 @@ export function buildActionPlan(briefing: Briefing, options: ActionPlanOptions):
   add(`- [ ] ${isEs ? "Generar preguntas fundamentadas en NotebookLM para el agente" : "Generate source-grounded questions in NotebookLM for the agent"}`);
   blank();
   add(`> **${t.prompt}:**`);
-  add(`> "${isEs
-    ? `Sube la documentación oficial de ${topDb} a NotebookLM. Pregunta: "¿Cuáles son las mejores prácticas para configurar ${topDb} para un proyecto de tipo ${briefing.identity.projectType}?" Extrae la respuesta textual para usarla como contexto del agente.`
-    : `Upload the official ${topDb} documentation to NotebookLM. Ask: "What are the best practices for configuring ${topDb} for a ${briefing.identity.projectType} project?" Extract the verbatim answer to use as agent context.`
-  }"`);
+  add(`> "Upload the official ${topDb} documentation to NotebookLM. Ask: 'What are the best practices for configuring ${topDb} for a ${briefing.identity.projectType} project?' Extract the verbatim answer to use as agent context."`);
   blank();
 
   add(`**${t.deliverable}:** ${isEs ? "Mood board + prompts contextualizados de NotebookLM" : "Mood board + contextualized NotebookLM prompts"}`);
@@ -87,10 +84,7 @@ export function buildActionPlan(briefing: Briefing, options: ActionPlanOptions):
     }
     blank();
     add(`> **${t.prompt}:**`);
-    add(`> "${isEs
-      ? `Configura ${topDb} para mi proyecto. Ejecuta este DDL: [pegar DDL del TRD]. Configura RLS para que cada usuario solo vea sus propios datos.`
-      : `Set up ${topDb} for my project. Execute this DDL: [paste DDL from TRD]. Configure RLS so each user can only see their own data.`
-    }"`);
+    add(`> "Set up ${topDb} for my project. Execute this DDL: [paste DDL from TRD]. Configure RLS so each user can only see their own data."`);
     blank();
     add(`**${t.deliverable}:** ${isEs ? `${topDb} configurado con esquema y políticas de seguridad` : `${topDb} configured with schema and security policies`}`);
     add(`**${t.doneWhen}:** ${isEs ? "Puedes insertar y consultar datos desde la consola" : "You can insert and query data from the console"}`);
@@ -110,10 +104,7 @@ export function buildActionPlan(briefing: Briefing, options: ActionPlanOptions):
   add(`- [ ] ${isEs ? "Verificar en el preview que la UI coincide con las referencias visuales" : "Verify in preview that the UI matches visual references"}`);
   blank();
   add(`> **${t.prompt}:**`);
-  add(`> "${isEs
-    ? `Crea un ${briefing.identity.projectType} llamado "${briefing.identity.name}". Incluye las siguientes capacidades: ${caps.map(c => c.labelEs).join(", ")}. Usa ${topDb} como base de datos. Sigue estas referencias visuales: [pegar referencias]. El tono debe ser: ${briefing.branding.toneAdjectives.join(", ") || "profesional y moderno"}.`
-    : `Create a ${briefing.identity.projectType} called "${briefing.identity.name}". Include these capabilities: ${caps.map(c => c.labelEn).join(", ")}. Use ${topDb} as the database. Follow these visual references: [paste references]. The tone should be: ${briefing.branding.toneAdjectives.join(", ") || "professional and modern"}.`
-  }"`);
+  add(`> "Create a ${briefing.identity.projectType} called '${briefing.identity.name || "App"}'. Include these capabilities: ${caps.map(c => c.labelEn).join(", ") || "none"}. Use ${topDb} as the database. Follow these visual references: [paste references]. The tone should be: ${briefing.branding.toneAdjectives.join(", ") || "professional and modern"}."`);
   blank();
   add(`**${t.deliverable}:** ${isEs ? "Codebase funcional con preview en vivo" : "Working codebase with live preview"}`);
   add(`**${t.doneWhen}:** ${isEs ? "Todas las capacidades seleccionadas están funcionando en el preview" : "All selected capabilities are working in preview"}`);
@@ -157,10 +148,7 @@ export function buildActionPlan(briefing: Briefing, options: ActionPlanOptions):
   add(`- [ ] ${isEs ? "Añadir datos reales y probar flujos completos" : "Add real data and test complete flows"}`);
   blank();
   add(`> **${t.prompt} (${isEs ? "diagnóstico de errores" : "error diagnosis"}):**`);
-  add(`> "${isEs
-    ? `Estoy viendo este error en mi app: [pegar error]. Mi stack es: ${topTool} + ${topDb} + ${deployRec.platform}. ¿Cuál es la causa más probable y cómo lo arreglo?`
-    : `I'm seeing this error in my app: [paste error]. My stack is: ${topTool} + ${topDb} + ${deployRec.platform}. What's the most likely cause and how do I fix it?`
-  }"`);
+  add(`> "I'm seeing this error in my app: [paste error]. My stack is: ${topTool} + ${topDb} + ${deployRec.platform}. What's the most likely cause and how do I fix it?"`);
   blank();
 
   add("---");

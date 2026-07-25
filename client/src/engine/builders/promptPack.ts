@@ -61,59 +61,31 @@ export function buildPromptPack(briefing: Briefing, options: PromptPackOptions):
   add(isEs ? "> Copia y pega este prompt como primera instrucción en tu agente de vibe coding." : "> Copy and paste this prompt as the first instruction to your vibe coding agent.");
   blank();
   add("```");
-  if (isEs) {
-    add(`Eres un ingeniero full-stack experto. Estoy construyendo "${briefing.identity.name}", un ${briefing.identity.projectType} con estas características:`);
-    add("");
-    add(`OBJETIVO: ${briefing.identity.tagline || briefing.identity.objective}`);
-    add(`TIPO: ${briefing.identity.projectType}`);
-    add(`AUDIENCIA: ${briefing.users.personas.map(p => p.role).join(", ")}`);
-    add(`DISPOSITIVO PRIMARIO: ${briefing.users.primaryDevice}`);
-    add(`CAPACIDADES: ${capList}`);
-    add(`BASE DE DATOS: ${topDb}`);
-    add(`DESPLIEGUE: ${deployRec.platform}`);
-    add(`TONO VISUAL: ${briefing.branding.toneAdjectives.join(", ") || "profesional y moderno"}`);
-    add(`COLOR BASE: ${briefing.branding.baseColor}`);
-    add(`DENSIDAD: ${briefing.branding.density}`);
-    add("");
-    add("RESTRICCIONES TÉCNICAS:");
-    add("- Usa React + Vite + TypeScript");
-    add("- CSS con variables OKLCH (ver tokens adjuntos)");
-    add("- Validación con Zod en cliente y servidor");
-    add("- Componentes accesibles (WCAG 2.1 AA)");
-    add("- Cada componente interactivo debe tener: estado vacío, cargando, error, éxito y deshabilitado");
-    add(`- Fuentes: Space Grotesk (display), Inter (body), JetBrains Mono (code)`);
-    if (briefing.identity.projectType === "pwa") {
-      add("- PWA: manifest completo, service worker con Workbox, estrategia de caché por tipo de recurso");
-    }
-    add("");
-    add("Empieza construyendo la estructura del proyecto y la navegación principal.");
-  } else {
-    add(`You are an expert full-stack engineer. I'm building "${briefing.identity.name}", a ${briefing.identity.projectType} with these characteristics:`);
-    add("");
-    add(`OBJECTIVE: ${briefing.identity.tagline || briefing.identity.objective}`);
-    add(`TYPE: ${briefing.identity.projectType}`);
-    add(`AUDIENCE: ${briefing.users.personas.map(p => p.role).join(", ")}`);
-    add(`PRIMARY DEVICE: ${briefing.users.primaryDevice}`);
-    add(`CAPABILITIES: ${capList}`);
-    add(`DATABASE: ${topDb}`);
-    add(`DEPLOY: ${deployRec.platform}`);
-    add(`VISUAL TONE: ${briefing.branding.toneAdjectives.join(", ") || "professional and modern"}`);
-    add(`BASE COLOR: ${briefing.branding.baseColor}`);
-    add(`DENSITY: ${briefing.branding.density}`);
-    add("");
-    add("TECHNICAL CONSTRAINTS:");
-    add("- Use React + Vite + TypeScript");
-    add("- CSS with OKLCH variables (see attached tokens)");
-    add("- Validation with Zod on client and server");
-    add("- Accessible components (WCAG 2.1 AA)");
-    add("- Every interactive component must have: empty, loading, error, success, and disabled states");
-    add(`- Fonts: Space Grotesk (display), Inter (body), JetBrains Mono (code)`);
-    if (briefing.identity.projectType === "pwa") {
-      add("- PWA: complete manifest, service worker with Workbox, cache strategy by resource type");
-    }
-    add("");
-    add("Start by building the project structure and main navigation.");
+  add(`You are an expert full-stack engineer. I'm building "${briefing.identity.name || "App"}", a ${briefing.identity.projectType} with these characteristics:`);
+  add("");
+  add(`OBJECTIVE: ${briefing.identity.tagline || briefing.identity.objective}`);
+  add(`TYPE: ${briefing.identity.projectType}`);
+  add(`AUDIENCE: ${briefing.users.personas.map(p => p.role).join(", ") || "General users"}`);
+  add(`PRIMARY DEVICE: ${briefing.users.primaryDevice}`);
+  add(`CAPABILITIES: ${caps.map(c => c.labelEn).join(", ") || "None specified"}`);
+  add(`DATABASE: ${topDb}`);
+  add(`DEPLOY: ${deployRec.platform}`);
+  add(`VISUAL TONE: ${briefing.branding.toneAdjectives.join(", ") || "professional and modern"}`);
+  add(`BASE COLOR: ${briefing.branding.baseColor}`);
+  add(`DENSITY: ${briefing.branding.density}`);
+  add("");
+  add("TECHNICAL CONSTRAINTS:");
+  add("- Use React + Vite + TypeScript");
+  add("- CSS with OKLCH variables (see attached design tokens)");
+  add("- Validation with Zod on client and server");
+  add("- Accessible components (WCAG 2.1 AA)");
+  add("- Every interactive component must have: empty, loading, error, success, and disabled states");
+  add(`- Fonts: Space Grotesk (display), Inter (body), JetBrains Mono (code)`);
+  if (briefing.identity.projectType === "pwa") {
+    add("- PWA: complete manifest, service worker with Workbox, cache strategy by resource type");
   }
+  add("");
+  add("Start by building the project structure and main navigation.");
   add("```");
   blank();
 
@@ -123,27 +95,15 @@ export function buildPromptPack(briefing: Briefing, options: PromptPackOptions):
   add(isEs ? "> Úsalo cuando encuentres un error." : "> Use when you encounter an error.");
   blank();
   add("```");
-  if (isEs) {
-    add("Estoy viendo este error en mi aplicación:");
-    add("[PEGAR ERROR AQUÍ]");
-    add("");
-    add(`Mi stack: React + Vite + TypeScript + ${topDb} + ${deployRec.platform}`);
-    add(`Capacidades implementadas: ${capList}`);
-    add("");
-    add("1. ¿Cuál es la causa raíz más probable?");
-    add("2. ¿Cuál es el fix más directo?");
-    add("3. ¿Podría este error afectar a otros componentes?");
-  } else {
-    add("I'm seeing this error in my application:");
-    add("[PASTE ERROR HERE]");
-    add("");
-    add(`My stack: React + Vite + TypeScript + ${topDb} + ${deployRec.platform}`);
-    add(`Implemented capabilities: ${capList}`);
-    add("");
-    add("1. What is the most likely root cause?");
-    add("2. What is the most direct fix?");
-    add("3. Could this error affect other components?");
-  }
+  add("I'm seeing this error in my application:");
+  add("[PASTE ERROR HERE]");
+  add("");
+  add(`My stack: React + Vite + TypeScript + ${topDb} + ${deployRec.platform}`);
+  add(`Implemented capabilities: ${caps.map(c => c.labelEn).join(", ") || "None"}`);
+  add("");
+  add("1. What is the most likely root cause?");
+  add("2. What is the most direct fix?");
+  add("3. Could this error affect other components?");
   add("```");
   blank();
 
@@ -151,31 +111,17 @@ export function buildPromptPack(briefing: Briefing, options: PromptPackOptions):
   add(`## 3. ${t.a11yReviewPrompt}`);
   blank();
   add("```");
-  if (isEs) {
-    add("Revisa este componente para cumplimiento de accesibilidad WCAG 2.1 AA:");
-    add("[PEGAR CÓDIGO DEL COMPONENTE]");
-    add("");
-    add("Verifica:");
-    add("- Contraste de color ≥ 4.5:1");
-    add("- Navegación por teclado (Tab, Enter, Escape)");
-    add("- Atributos ARIA correctos");
-    add("- Alt text en imágenes");
-    add("- Labels en formularios");
-    add("- Touch targets ≥ 44×44px");
-    add("- Soporte para `prefers-reduced-motion`");
-  } else {
-    add("Review this component for WCAG 2.1 AA accessibility compliance:");
-    add("[PASTE COMPONENT CODE]");
-    add("");
-    add("Check:");
-    add("- Color contrast ≥ 4.5:1");
-    add("- Keyboard navigation (Tab, Enter, Escape)");
-    add("- Correct ARIA attributes");
-    add("- Image alt text");
-    add("- Form labels");
-    add("- Touch targets ≥ 44×44px");
-    add("- `prefers-reduced-motion` support");
-  }
+  add("Review this component for WCAG 2.1 AA accessibility compliance:");
+  add("[PASTE COMPONENT CODE]");
+  add("");
+  add("Check:");
+  add("- Color contrast ≥ 4.5:1");
+  add("- Keyboard navigation (Tab, Enter, Escape)");
+  add("- Correct ARIA attributes");
+  add("- Image alt text");
+  add("- Form labels");
+  add("- Touch targets ≥ 44×44px");
+  add("- `prefers-reduced-motion` support");
   add("```");
   blank();
 
@@ -183,23 +129,13 @@ export function buildPromptPack(briefing: Briefing, options: PromptPackOptions):
   add(`## 4. ${t.visualReviewPrompt}`);
   blank();
   add("```");
-  if (isEs) {
-    add(`Revisa la UI de mi ${briefing.identity.projectType} contra estas referencias visuales:`);
-    add("[PEGAR CAPTURA O ENLACE]");
-    add("");
-    add(`Tono deseado: ${briefing.branding.toneAdjectives.join(", ") || "profesional y moderno"}`);
-    add(`Densidad: ${briefing.branding.density}`);
-    add("");
-    add("¿Qué ajustes de espaciado, tipografía, color o animación mejorarían la coherencia con las referencias?");
-  } else {
-    add(`Review my ${briefing.identity.projectType} UI against these visual references:`);
-    add("[PASTE SCREENSHOT OR LINK]");
-    add("");
-    add(`Desired tone: ${briefing.branding.toneAdjectives.join(", ") || "professional and modern"}`);
-    add(`Density: ${briefing.branding.density}`);
-    add("");
-    add("What spacing, typography, color, or animation adjustments would improve consistency with the references?");
-  }
+  add(`Review my ${briefing.identity.projectType} UI against these visual references:`);
+  add("[PASTE SCREENSHOT OR LINK]");
+  add("");
+  add(`Desired tone: ${briefing.branding.toneAdjectives.join(", ") || "professional and modern"}`);
+  add(`Density: ${briefing.branding.density}`);
+  add("");
+  add("What spacing, typography, color, or animation adjustments would improve consistency with the references?");
   add("```");
   blank();
 
