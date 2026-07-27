@@ -71,8 +71,8 @@ export default function ResourceVault() {
     <PageLayout
       title={isEs ? "Resource Vault" : "Resource Vault"}
       subtitle={isEs
-        ? "Arsenal de ~100 herramientas seleccionadas para vibe coding. Filtrado por capacidades, precios y comparación de características."
-        : "Arsenal of ~100 curated tools for vibe coding. Filter by briefing capabilities, pricing tiers, and side-by-side tool comparison."
+        ? "Arsenal de ~120 herramientas seleccionadas para vibe coding. Categorías: inspiración de diseño, imágenes gratis, herramientas de video y más."
+        : "Arsenal of ~120 curated tools for vibe coding across 23 categories — design inspiration, free media, video tools, and more."
       }
       phase="02"
     >
