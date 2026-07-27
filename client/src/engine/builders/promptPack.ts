@@ -139,11 +139,41 @@ export function buildPromptPack(briefing: Briefing, options: PromptPackOptions):
   add("```");
   blank();
 
-  // ── Starter Files ──
-  add(`## 5. ${t.starterFiles}`);
+  // ── Security Audit Prompt (Cyber Neo-inspired) ──
+  const secLabel = isEs ? "Prompt de Auditoría de Seguridad" : "Security Audit Prompt";
+  add(`## 5. ${secLabel}`);
   blank();
+  add(isEs
+    ? "> Pégalo en Claude Code antes de publicar tu app. Cubre los 11 dominios que revisa Cyber Neo."
+    : "> Paste in Claude Code before publishing your app. Covers the 11 security domains Cyber Neo audits.");
+  blank();
+  add("```");
+  add(isEs
+    ? `Haz una revisión de seguridad completa de este proyecto (${briefing.identity.name || "App"}). Revisa cada uno de los siguientes dominios y reporta hallazgos clasificados por gravedad: Critical, High, Medium, Low.`
+    : `Do a complete security review of this project (${briefing.identity.name || "App"}). Review each of the following domains and report findings classified by severity: Critical, High, Medium, Low.`);
+  add("");
+  add(isEs ? "Dominios a revisar:" : "Domains to review:");
+  add(isEs ? "1. Código (SAST): variables hardcodeadas, eval(), innerHTML con datos de usuario, concatenación de SQL" : "1. Code (SAST): hardcoded secrets, eval(), innerHTML with user data, SQL concatenation");
+  add(isEs ? "2. Autenticación: expiración de tokens, logout, bloqueo por intentos fallidos" : "2. Authentication: token expiry, logout, lockout on failed attempts");
+  add(isEs ? "3. Criptografía: algoritmos obsoletos, secretos débiles, hashing de contraseñas" : "3. Cryptography: weak algorithms, weak secrets, password hashing");
+  add(isEs ? "4. Secretos filtrados: tokens, API keys o credenciales en el código o en el bundle" : "4. Leaked secrets: tokens, API keys, or credentials in code or bundle");
+  add(isEs ? "5. Dependencias: paquetes con CVEs conocidos en package.json / pnpm-lock.yaml" : "5. Dependencies: packages with known CVEs in package.json / pnpm-lock.yaml");
+  add(isEs ? "6. Seguridad Web: ausencia de CSP, X-Frame-Options, X-Content-Type-Options, CORS mal configurado" : "6. Web Security: missing CSP, X-Frame-Options, X-Content-Type-Options, misconfigured CORS");
+  add(isEs ? "7. Supply Chain: lockfile ausente o bypasseable, dependencias sin fijar" : "7. Supply Chain: missing or bypassable lockfile, unpinned dependencies");
+  add(isEs ? "8. CI/CD: secretos expuestos en logs, actions sin pinning de versión" : "8. CI/CD: secrets exposed in logs, actions without version pinning");
+  add(isEs ? "9. Manejo de Errores: stack traces expuestos al usuario, errores sin capturar" : "9. Error Handling: stack traces exposed to user, uncaught errors");
+  add(isEs ? "10. Logging: datos sensibles (contraseñas, tokens, PII) en logs" : "10. Logging: sensitive data (passwords, tokens, PII) in logs");
+  if (capIds.includes("auth")) {
+    add(isEs ? "11. Control de Acceso: rutas o endpoints accesibles sin autenticación" : "11. Access Control: routes or endpoints accessible without authentication");
+  }
+  add("");
+  add(isEs
+    ? "Para cada hallazgo indica: archivo exacto + línea, descripción del riesgo, y la corrección recomendada. Empieza por Critical y High. No modifiques ningún archivo hasta que yo lo confirme."
+    : "For each finding indicate: exact file + line, risk description, and recommended fix. Start with Critical and High. Do not modify any file until I confirm.");
+  add("```");
+  // ── Starter Files ──
+  add(`## 6. ${t.starterFiles}`);
 
-  // CLAUDE.md
   add(`### \`CLAUDE.md\``);
   add(`> ${t.copyInstruction}`);
   blank();
@@ -179,6 +209,13 @@ export function buildPromptPack(briefing: Briefing, options: PromptPackOptions):
   add("- Every interactive component needs 5 states: empty, loading, error, success, disabled");
   add("- Use CSS custom properties for design tokens (see index.css)");
   add("- Prefer named exports over default exports for components");
+  add("");
+  add("## Security Rules");
+  add("- Never hardcode secrets, API keys or tokens — use environment variables");
+  add("- Validate all user inputs with Zod on both client and server");
+  add("- Set CSP, X-Frame-Options and X-Content-Type-Options headers in deploy config");
+  add("- Never log sensitive data (passwords, tokens, PII)");
+  add("- Audit dependencies for CVEs before shipping");
   add("```");
   blank();
 
@@ -197,6 +234,13 @@ export function buildPromptPack(briefing: Briefing, options: PromptPackOptions):
   add("- Follow mobile-first responsive design");
   add("- Preserve existing comments and documentation");
   add("- Run `pnpm check` before committing");
+  add("");
+  add("## Security Rules");
+  add("- Never hardcode secrets or API keys — use environment variables");
+  add("- Validate all inputs with Zod on client AND server");
+  add("- Set security headers (CSP, X-Frame-Options) in netlify.toml / vercel.json");
+  add("- Never expose stack traces or internal errors to end users");
+  add("- Never log passwords, tokens, or PII");
   add("```");
   blank();
 

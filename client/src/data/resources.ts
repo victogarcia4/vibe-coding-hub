@@ -44,10 +44,42 @@ export const vaultCategories = [
   { id: "designInspiration", label: "Inspiración de Diseño", labelEn: "Design Inspiration" },
   { id: "freeMedia", label: "Imágenes & Video Gratis", labelEn: "Free Images & Video" },
   { id: "videoTools", label: "Herramientas de Video", labelEn: "Video Tools" },
+  { id: "claudeTools", label: "Skills de Claude Code", labelEn: "Claude Code Skills" },
 ];
 
 export const resources: Resource[] = [
-  // ── 1. AUTHENTICATION ──────────────────────────────────────────────────────
+  // ── 0. CLAUDE CODE SKILLS ──────────────────────────────────────────────────
+  {
+    id: "the-architect",
+    name: "El Arquitecto (The Architect)",
+    description: "Claude Code community skill that interviews you about your idea and generates a 16-section BLUEPRINT.md with auth, roles, API protection, rate limiting, and data handling designed from the start.",
+    vibecoderNote: "Describe tu idea, responde la entrevista y recibes un plano completo de 16 secciones antes de escribir una sola línea de código. La seguridad entra en el diseño, no como parche al final.",
+    url: "https://github.com/Hainrixz/the-architect",
+    category: "claudeTools",
+    subcategory: "App Blueprint Generator",
+    tags: ["claude-code", "blueprint", "architecture", "security", "planning"],
+    highlight: true,
+    hasFreeTier: true,
+    pricingTier: "free",
+    maturity: "production-ready",
+    alternatives: ["Cyber Neo"],
+  },
+  {
+    id: "cyber-neo",
+    name: "Cyber Neo",
+    description: "Claude Code skill that launches 5 parallel subagents auditing 11 security domains (SAST, auth, secrets, dependencies, CSP, supply chain, CI/CD, containers, error handling, logging) and delivers a severity-ranked Markdown report to your Desktop.",
+    vibecoderNote: "Corre /cyber-neo . en la raíz de tu proyecto. Cinco subagentes en paralelo revisan tu código en minutos y te dejan un reporte clasificado Critical → High → Medium → Low. 100% de solo lectura — nunca toca tus archivos.",
+    url: "https://github.com/Hainrixz/cyber-neo",
+    category: "claudeTools",
+    subcategory: "Security Auditor",
+    tags: ["claude-code", "security", "audit", "sast", "csp", "dependencies"],
+    highlight: true,
+    hasFreeTier: true,
+    pricingTier: "free",
+    maturity: "production-ready",
+    alternatives: ["The Architect"],
+  },
+
   {
     id: "clerk",
     name: "Clerk",

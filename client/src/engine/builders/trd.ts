@@ -349,29 +349,121 @@ export function buildTrd(briefing: Briefing, options: TrdOptions): string {
   add("| Lighthouse Performance | ≥ 90 |");
   blank();
 
-  // ── Security ──
+  // ── Security ── (El Arquitecto-inspired: security designed from the blueprint, not patched at the end)
   add(`## 9. ${t.securitySection}`);
   blank();
   if (options.lang === "es") {
-    add("- Validación de entrada con Zod en cliente y servidor");
-    add("- Cabeceras CSP, X-Frame-Options, X-Content-Type-Options");
-    add("- Variables de entorno para secretos (nunca en el bundle)");
-    add("- HTTPS obligatorio");
-    if (capIds.includes("payments")) add("- Cumplimiento PCI DSS Nivel 1 vía Stripe Elements");
-    if (briefing.data.entities.some(e => e.sensitivity !== "none")) {
-      add("- Cifrado en reposo para datos sensibles");
-      add("- Políticas de retención de datos configuradas");
+    add("### 9.1 Cabeceras HTTP de Seguridad");
+    add("| Cabecera | Valor recomendado |");
+    add("|---|---|");
+    add("| `Content-Security-Policy` | `default-src 'self'; script-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self';` |");
+    add("| `X-Frame-Options` | `DENY` |");
+    add("| `X-Content-Type-Options` | `nosniff` |");
+    add("| `Referrer-Policy` | `strict-origin-when-cross-origin` |");
+    add("| `Permissions-Policy` | `camera=(), microphone=(), geolocation=()` |");
+    blank();
+    add("### 9.2 Protección de Endpoints");
+    add("| Ruta / Endpoint | Autenticación | Rate Limit | Notas |");
+    add("|---|---|---|---|");
+    if (capIds.includes("auth")) {
+      add("| `POST /auth/register` | Pública | 5 req/min | Validar email y contraseña con Zod |");
+      add("| `POST /auth/login` | Pública | 10 req/min | Bloqueo tras 5 intentos fallidos |");
+      add("| `POST /auth/refresh` | Token refresh | 20 req/min | Rotación de refresh tokens |");
+      add("| `DELETE /auth/session` | Requerida | — | Invalidar sesión en servidor |");
     }
+    if (capIds.includes("payments")) {
+      add("| `POST /payments/checkout` | Requerida | 5 req/min | Solo via Stripe; nunca guardar PAN |");
+      add("| `POST /webhooks/stripe` | Firma Stripe | — | Verificar `Stripe-Signature` header |");
+    }
+    add("| `GET /api/*` | Requerida | 60 req/min/usuario | JWT validado en cada request |");
+    add("| `POST /api/*` | Requerida | 30 req/min/usuario | Validar body con Zod antes de procesar |");
+    blank();
+    add("### 9.3 Manejo de Datos Sensibles");
+    const hasSensitive = briefing.data.entities.some(e => e.sensitivity !== "none");
+    if (hasSensitive) {
+      add("⚠️ **Este proyecto maneja datos sensibles** — aplicar las siguientes políticas:");
+      add("- Cifrar en reposo los campos marcados como PII, salud o pagos");
+      add("- Nunca registrar datos sensibles en logs (contraseñas, tokens, PAN, SSN)");
+      add("- Enmascarar en respuestas de API (p.ej. `email` → `u***@domain.com`)");
+      add(`- Retención máxima: ${briefing.data.retentionMonths} meses — implementar política de borrado automático`);
+      if (briefing.data.entities.some(e => e.sensitivity === "payments")) {
+        add("- Cumplimiento PCI DSS Nivel 1 vía Stripe Elements (nunca manejar PAN directamente)");
+      }
+    } else {
+      add("- No se detectan datos de alta sensibilidad. Aplicar mínimo: HTTPS + tokens en HttpOnly cookies.");
+    }
+    blank();
+    add("### 9.4 Validación e Higiene de Inputs");
+    add("- Validar todos los inputs con **Zod** en cliente y servidor (nunca confiar solo en el cliente)");
+    add("- Sanitizar outputs para prevenir XSS (usar `textContent`, no `innerHTML` con datos de usuario)");
+    add("- Usar parámetros preparados (ORM / query builder) — nunca concatenar SQL");
+    add("- Variables de entorno para secretos — nunca en el bundle de cliente (`VITE_` expone al browser)");
+    blank();
+    add("### 9.5 Mitigaciones OWASP Top 10");
+    add("| Riesgo | Mitigación |");
+    add("|---|---|");
+    add("| A01 Broken Access Control | RLS en DB + validación de roles en middleware |");
+    add("| A02 Cryptographic Failures | HTTPS + cifrado en reposo para datos sensibles |");
+    add("| A03 Injection | Zod validation + ORM parameterized queries |");
+    add("| A05 Security Misconfiguration | CSP + HSTS + cabeceras de seguridad en despliegue |");
+    add("| A07 Auth Failures | Rate limiting + bloqueo por intentos + tokens de corta vida |");
+    add("| A09 Logging Failures | Audit log de eventos críticos sin datos sensibles |");
   } else {
-    add("- Input validation with Zod on client and server");
-    add("- CSP, X-Frame-Options, X-Content-Type-Options headers");
-    add("- Environment variables for secrets (never in bundle)");
-    add("- HTTPS required");
-    if (capIds.includes("payments")) add("- PCI DSS Level 1 compliance via Stripe Elements");
-    if (briefing.data.entities.some(e => e.sensitivity !== "none")) {
-      add("- Encryption at rest for sensitive data");
-      add("- Data retention policies configured");
+    add("### 9.1 HTTP Security Headers");
+    add("| Header | Recommended Value |");
+    add("|---|---|");
+    add("| `Content-Security-Policy` | `default-src 'self'; script-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self';` |");
+    add("| `X-Frame-Options` | `DENY` |");
+    add("| `X-Content-Type-Options` | `nosniff` |");
+    add("| `Referrer-Policy` | `strict-origin-when-cross-origin` |");
+    add("| `Permissions-Policy` | `camera=(), microphone=(), geolocation=()` |");
+    blank();
+    add("### 9.2 Endpoint Protection");
+    add("| Route / Endpoint | Auth | Rate Limit | Notes |");
+    add("|---|---|---|---|");
+    if (capIds.includes("auth")) {
+      add("| `POST /auth/register` | Public | 5 req/min | Validate email + password with Zod |");
+      add("| `POST /auth/login` | Public | 10 req/min | Lock after 5 failed attempts |");
+      add("| `POST /auth/refresh` | Refresh token | 20 req/min | Rotate refresh tokens |");
+      add("| `DELETE /auth/session` | Required | — | Invalidate session server-side |");
     }
+    if (capIds.includes("payments")) {
+      add("| `POST /payments/checkout` | Required | 5 req/min | Via Stripe only; never store PAN |");
+      add("| `POST /webhooks/stripe` | Stripe signature | — | Verify `Stripe-Signature` header |");
+    }
+    add("| `GET /api/*` | Required | 60 req/min/user | JWT validated on every request |");
+    add("| `POST /api/*` | Required | 30 req/min/user | Validate body with Zod before processing |");
+    blank();
+    add("### 9.3 Sensitive Data Handling");
+    const hasSensitiveEn = briefing.data.entities.some(e => e.sensitivity !== "none");
+    if (hasSensitiveEn) {
+      add("⚠️ **This project handles sensitive data** — apply the following policies:");
+      add("- Encrypt at rest all fields marked as PII, health, or payment data");
+      add("- Never log sensitive data (passwords, tokens, PAN, SSN)");
+      add("- Mask in API responses (e.g. `email` → `u***@domain.com`)");
+      add(`- Maximum retention: ${briefing.data.retentionMonths} months — implement automatic deletion policy`);
+      if (briefing.data.entities.some(e => e.sensitivity === "payments")) {
+        add("- PCI DSS Level 1 compliance via Stripe Elements (never handle PAN directly)");
+      }
+    } else {
+      add("- No high-sensitivity data detected. Minimum: HTTPS + tokens in HttpOnly cookies.");
+    }
+    blank();
+    add("### 9.4 Input Validation & Hygiene");
+    add("- Validate all inputs with **Zod** on client and server (never trust client-only validation)");
+    add("- Sanitize outputs to prevent XSS (use `textContent`, not `innerHTML` with user data)");
+    add("- Use prepared statements (ORM / query builder) — never concatenate SQL");
+    add("- Secrets via environment variables — never in the client bundle (`VITE_` exposes to browser)");
+    blank();
+    add("### 9.5 OWASP Top 10 Mitigations");
+    add("| Risk | Mitigation |");
+    add("|---|---|");
+    add("| A01 Broken Access Control | DB-level RLS + role validation in middleware |");
+    add("| A02 Cryptographic Failures | HTTPS + encryption at rest for sensitive data |");
+    add("| A03 Injection | Zod validation + ORM parameterized queries |");
+    add("| A05 Security Misconfiguration | CSP + HSTS + security headers on deploy |");
+    add("| A07 Auth Failures | Rate limiting + lockout + short-lived tokens |");
+    add("| A09 Logging Failures | Audit log of critical events without sensitive data |");
   }
   blank();
 

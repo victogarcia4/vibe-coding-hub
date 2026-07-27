@@ -10,6 +10,7 @@ import {
   type Briefing, createEmptyBriefing, getSectionCompleteness, getOverallCompleteness,
   type ProjectType, ProjectTypeEnum, ObjectiveEnum, DeviceEnum, TechLevelEnum,
   BudgetEnum, YourTechLevelEnum, PreferredToolEnum, DeployPlatformEnum, DensityEnum,
+  BriefingSchema,
 } from "@/engine/schema";
 import { capabilities } from "@/engine/capabilities";
 import { generateAllDocuments, type GeneratedDocuments } from "@/engine/export/exporter";
@@ -24,7 +25,13 @@ const STORAGE_KEY = "vibe-hub-briefing-draft";
 function loadDraft(): Briefing {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : createEmptyBriefing();
+    if (!stored) return createEmptyBriefing();
+    const parsed = JSON.parse(stored);
+    const result = BriefingSchema.safeParse(parsed);
+    if (result.success) return result.data;
+    // Data is malformed (version mismatch or corruption) — clear and reset
+    localStorage.removeItem(STORAGE_KEY);
+    return createEmptyBriefing();
   } catch {
     return createEmptyBriefing();
   }
