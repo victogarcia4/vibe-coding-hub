@@ -15,7 +15,7 @@ import {
 } from "@/storage/db";
 import { createEmptyBriefing, getOverallCompleteness } from "@/engine/schema";
 import { generateAllDocuments, downloadJson, downloadMarkdown } from "@/engine/export/exporter";
-import { backupProjectToDrive, exportDocToGoogleDoc, getGoogleAccessToken, setGoogleAccessToken } from "@/storage/googleDrive";
+import { backupProjectToDrive, exportDocToGoogleDoc, getGoogleAccessToken, setGoogleAccessToken, listBackupFiles, downloadBackupFile } from "@/storage/googleDrive";
 
 export default function ProjectLibrary() {
   const [projects, setProjects] = useState<ProjectRecord[]>([]);
@@ -27,6 +27,8 @@ export default function ProjectLibrary() {
   const [renameValue, setRenameValue] = useState("");
   const [gdriveToken, setGdriveToken] = useState<string | null>(getGoogleAccessToken());
   const [gdriveStatus, setGdriveStatus] = useState<string | null>(null);
+  const [syncingDrive, setSyncingDrive] = useState(false);
+  const [driveImported, setDriveImported] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { t, language } = useI18n();
@@ -49,6 +51,50 @@ export default function ProjectLibrary() {
   useEffect(() => {
     loadProjects();
   }, []);
+
+  // Auto-pull from Google Drive on load if connected
+  useEffect(() => {
+    if (!gdriveToken) return;
+    const pullFromDrive = async () => {
+      setSyncingDrive(true);
+      try {
+        const files = await listBackupFiles();
+        const localProjects = await getAllProjects();
+        const localIds = new Set(localProjects.map(p => p.id));
+        let imported = 0;
+        for (const file of files) {
+          try {
+            const data = await downloadBackupFile(file.id) as Record<string, unknown>;
+            if (data && data.id && data.briefing && data.name && !localIds.has(data.id as string)) {
+              await saveProject({
+                id: data.id as string,
+                name: data.name as string,
+                briefing: data.briefing as never,
+                documents: (data.documents as never) ?? null,
+                createdAt: (data.createdAt as string) ?? new Date().toISOString(),
+                updatedAt: (data.updatedAt as string) ?? new Date().toISOString(),
+                archived: (data.archived as boolean) ?? false,
+                version: (data.version as number) ?? 1,
+              });
+              imported++;
+            }
+          } catch {
+            // Skip unreadable files silently
+          }
+        }
+        if (imported > 0) {
+          setDriveImported(imported);
+          await loadProjects();
+          setTimeout(() => setDriveImported(null), 5000);
+        }
+      } catch {
+        // Drive pull is best-effort
+      } finally {
+        setSyncingDrive(false);
+      }
+    };
+    pullFromDrive();
+  }, [gdriveToken]);
 
   // Filtered projects
   const filteredProjects = useMemo(() => {
@@ -182,8 +228,8 @@ export default function ProjectLibrary() {
     <PageLayout
       title={isEs ? "Mis Proyectos" : "My Projects"}
       subtitle={isEs
-        ? "Biblioteca local de proyectos. Crea, gestiona y exporta tus briefs de arquitectura con persistencia garantizada en tu navegador."
-        : "Local project workspace. Create, manage, and export your architecture briefs with guaranteed local browser persistence."
+        ? "Biblioteca de proyectos con respaldo automático en Google Drive. Conecta Drive una vez y cada proyecto se guardará en la nube."
+        : "Project workspace with automatic Google Drive backup. Connect Drive once and every project will be saved to the cloud."
       }
       phase="04"
     >
@@ -238,12 +284,91 @@ export default function ProjectLibrary() {
         </div>
       </div>
 
-      {/* Drive Status Alert */}
+      {/* Google Drive Connection Banner */}
+      {!gdriveToken && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6 p-4 rounded-xl border border-signal-border bg-signal-soft flex flex-col sm:flex-row sm:items-center gap-3"
+        >
+          <div className="flex items-center gap-3 flex-1">
+            <HardDrive size={20} className="text-signal flex-shrink-0" />
+            <div>
+              <p className="text-sm font-semibold text-text-strong">
+                {isEs ? "Conecta Google Drive para respaldo automático" : "Connect Google Drive for automatic backup"}
+              </p>
+              <p className="text-xs text-text-muted mt-0.5">
+                {isEs
+                  ? "Cada proyecto se guardará en Drive automáticamente. Sin configuración extra."
+                  : "Every project will be saved to Drive automatically. No extra setup."
+                }
+              </p>
+            </div>
+          </div>
+          <button
+            id="connect-google-drive-btn"
+            onClick={() => {
+              // @ts-ignore — Google Identity Services loaded via script tag
+              if (typeof google === "undefined") {
+                alert(isEs ? "Google Identity Services no está disponible." : "Google Identity Services not available.");
+                return;
+              }
+              // @ts-ignore
+              const client = google.accounts.oauth2.initTokenClient({
+                client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID || "",
+                scope: "https://www.googleapis.com/auth/drive.file",
+                callback: (resp: { access_token?: string; error?: string }) => {
+                  if (resp.access_token) {
+                    setGoogleAccessToken(resp.access_token);
+                    setGdriveToken(resp.access_token);
+                    setGdriveStatus(isEs ? "✓ Google Drive conectado" : "✓ Google Drive connected");
+                    setTimeout(() => setGdriveStatus(null), 3000);
+                  }
+                },
+              });
+              client.requestAccessToken();
+            }}
+            className="px-5 py-2 rounded-lg text-sm font-semibold bg-signal text-primary-foreground hover:opacity-90 transition-all flex-shrink-0 flex items-center gap-2"
+          >
+            <HardDrive size={14} />
+            {isEs ? "Conectar Drive" : "Connect Drive"}
+          </button>
+        </motion.div>
+      )}
+
+      {/* Drive Sync Status */}
+      {gdriveToken && syncingDrive && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-4 p-3 rounded-lg bg-surface-2 border border-border-subtle text-xs font-mono text-text-muted flex items-center gap-2"
+        >
+          <RefreshCw size={13} className="animate-spin text-signal" />
+          {isEs ? "Sincronizando con Google Drive..." : "Syncing with Google Drive..."}
+        </motion.div>
+      )}
+
+      {/* Drive Import Success */}
+      {driveImported !== null && driveImported > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-4 p-3 rounded-lg bg-signal-soft border border-signal-border text-xs font-semibold text-text-strong flex items-center gap-2"
+        >
+          <CheckCircle2 size={14} className="text-signal" />
+          {isEs
+            ? `${driveImported} proyecto${driveImported > 1 ? "s" : ""} restaurado${driveImported > 1 ? "s" : ""} desde Google Drive`
+            : `${driveImported} project${driveImported > 1 ? "s" : ""} restored from Google Drive`
+          }
+        </motion.div>
+      )}
+
+      {/* Drive Status Alert (backup/errors) */}
       {gdriveStatus && (
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-6 p-3 rounded-lg bg-signal-soft border border-signal-border text-xs font-semibold text-text-strong flex items-center gap-2"
+          className="mb-4 p-3 rounded-lg bg-signal-soft border border-signal-border text-xs font-semibold text-text-strong flex items-center gap-2"
         >
           <HardDrive size={14} className="text-signal" />
           {gdriveStatus}

@@ -76,7 +76,7 @@ export default function BriefingStudio() {
 
     // Save or update project in IndexedDB
     try {
-      const { saveProject, createSnapshot } = await import("@/storage/db");
+      const { saveProject, createSnapshot, getProject } = await import("@/storage/db");
       let projectId = sessionStorage.getItem("vibe-hub-active-project-id");
 
       if (!projectId) {
@@ -86,18 +86,41 @@ export default function BriefingStudio() {
 
       const projectName = briefing.identity.name.trim() || (isEs ? "Sin Título" : "Untitled Project");
 
-      await saveProject({
+      // Preserve original createdAt if the project already exists
+      const existing = await getProject(projectId);
+      const savedProject = await saveProject({
         id: projectId,
         name: projectName,
         briefing,
         documents: docs,
-        createdAt: new Date().toISOString(),
+        createdAt: existing?.createdAt ?? new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        archived: false,
-        version: 1,
+        archived: existing?.archived ?? false,
+        version: (existing?.version ?? 0) + 1,
       });
 
       await createSnapshot(projectId, briefing, docs, "Document generation");
+
+      // ── Auto-backup to Google Drive (silent background sync) ──────────────
+      // Only runs if the user is already authenticated this session.
+      try {
+        const { getGoogleAccessToken, listBackupFiles, backupProjectToDrive, updateBackupFile } = await import("@/storage/googleDrive");
+        const token = getGoogleAccessToken();
+        if (token) {
+          const fileName = `${projectName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-backup.json`;
+          const existingFiles = await listBackupFiles();
+          const match = existingFiles.find(f => f.name === fileName);
+          if (match) {
+            // Update existing file — no duplicate
+            await updateBackupFile(match.id, savedProject);
+          } else {
+            // First time — create new backup
+            await backupProjectToDrive(savedProject);
+          }
+        }
+      } catch {
+        // Drive backup is best-effort — never block document generation
+      }
     } catch (err) {
       console.error("Failed to save project to IndexedDB:", err);
     }

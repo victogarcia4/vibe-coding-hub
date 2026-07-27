@@ -152,3 +152,44 @@ export async function exportDocToGoogleDoc(
   if (!uploadRes.ok) throw new Error("Failed to create Google Doc in Google Drive.");
   return uploadRes.json();
 }
+
+/**
+ * Lists all project backup JSON files in the "Vibe Coding Hub" Drive folder.
+ * Returns an array of { id, name, modifiedTime } objects.
+ */
+export async function listBackupFiles(): Promise<{ id: string; name: string; modifiedTime: string }[]> {
+  const folderId = await getOrCreateVibeHubFolder();
+  const query = encodeURIComponent(
+    `'${folderId}' in parents and mimeType = 'application/json' and trashed = false and name contains '-backup.json'`
+  );
+  const res = await driveApiFetch(`files?q=${query}&fields=files(id,name,modifiedTime)&orderBy=modifiedTime desc`);
+  return (res.files || []) as { id: string; name: string; modifiedTime: string }[];
+}
+
+/**
+ * Downloads and parses a project JSON backup file from Google Drive.
+ */
+export async function downloadBackupFile(fileId: string): Promise<unknown> {
+  const token = getGoogleAccessToken();
+  const res = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error(`Failed to download backup file (${res.status})`);
+  return res.json();
+}
+
+/**
+ * Updates an existing Drive file by ID (for upsert/sync — avoids creating duplicates).
+ */
+export async function updateBackupFile(fileId: string, content: unknown): Promise<void> {
+  const token = getGoogleAccessToken();
+  const res = await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(content, null, 2),
+  });
+  if (!res.ok) throw new Error(`Failed to update backup file (${res.status})`);
+}
